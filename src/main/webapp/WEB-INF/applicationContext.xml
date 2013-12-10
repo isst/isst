@@ -23,7 +23,7 @@
     <property name="driverClassName" value="com.mysql.jdbc.Driver" />
     <property name="url" value="jdbc:mysql://localhost:3306/isst?characterEncoding=UTF-8" />
     <property name="username" value="root" />
-    <property name="password" value="root" />
+    <property name="password" value="isst" />
     <property name="maxActive" value="20" />
     <property name="initialSize" value="1" />
     <property name="maxWait" value="60000" />
