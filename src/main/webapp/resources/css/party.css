@@ -1,0 +1,121 @@
+@charset "utf-8";
+/*reset*/
+html,body{ overflow:auto;}
+div {overflow:hidden;}
+body,div,p,dl,th,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,blockquote{padding:0; margin:0;}
+body {text-align:center;font-family:MicroSoft YaHei,simHei;font-size:36px; background-color:#3a9dcd;}
+div { text-align:left;}
+table,td,tr,th{font-size:12px;}
+li{list-style-type:none;}
+table{ margin:0 auto;}
+img{vertical-align:top;border:0;}
+ol,ul {list-style:none;}   
+caption,th {text-align:left;}  
+h1,h2,h3,h4,h5,h6 {font-size:12px; font-weight:normal;}   
+q:before,q:after {content:'';}   
+abbr,acronym {border:0;}
+address,caption,cite,code,dfn,em,th,var {font-weight:normal; font-style:normal;}   
+a {color:#333;text-decoration:none;}
+a:visited {color:#333;text-decoration:none;}
+a:hover {color:#2A66C1;text-decoration:underline;}
+a:active {color:#2A66C1;}
+.left{float:left;}
+.right{ float:right}
+.cl{zoom:1;}
+.cl:after{content:"";display:block;clear:both;height:0; }
+.clear {clear:both; height:0; line-height:0; font-size:0;display:block;}
+
+.wrapperSize1024,.wrapperSize1280{ width:100%; height:768px; margin:0px auto; background:url(../images/bg.jpg) no-repeat center top;}
+.microblog{ width:920px; margin:0px auto;}
+.topbox{ height:94px; padding-top:25px; overflow:hidden;}
+.vip img{ vertical-align:middle; margin-top:-5px;}
+.phone img{ vertical-align:middle; margin-top:-5px;}
+
+/*微博墙头部*/
+/*只有用户自定义和微博logo*/
+.custom p{ background:url(../images/custom.png) no-repeat right center; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/custom.png'); height:84px; line-height:84px; text-align:center; color:#FFFFFF; font-style:italic; font-size:52px; font-weight:bold; text-align:center; padding-left:130px;}
+.custom p.customCon{ font-size:30px; line-height:40px;}
+.topbox .custom{ width:610px;}
+.tencentLogo{ line-height:300px; background:url(../images/logo.png) no-repeat; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/logo.png'); width:290px; height:84px; margin-left:10px;}
+.partnerLogo{ width:540px; height:84px; float:right; text-align:right;}
+
+
+/*微博墙内容列表*/
+.talkBg{ background:url(../images/listBG.png) no-repeat; width:920px; height:593px; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/listBG.png');}
+.DCont,.talkList{ width:884px; height:555px; margin:19px auto 0px; overflow:hidden;}
+.LC li,.DCont li{ background:#320100 url(../images/listS.png) no-repeat center top; -moz-border-radius:6px; -webkit-border-radius:6px; border:1px solid #fdfdfd; padding:35px 15px; margin-bottom:7px;}
+.LC li.limit{ height:125px; overflow:hidden; padding:24px 15px 30px;}
+.userPic{ padding:3px; background:#FFFFFF; border:1px solid #5d5f7d; float:left; margin-top:5px;}
+.userPic img{ width:100px; height:100px; overflow:hidden;}
+.msgBox,.bigPicBox{ margin:0px 0px 0px 10px;}
+.msgBox{ font-weight:bold; line-height:1.5em;}
+.userName,.userName a,.msgCnt,.msgCnt a{ display:inline; color:#FFFFFF;}
+.userName a{ line-height:1.5em; color:#d0fc9b;}
+.picWrap{ clear:both; margin:10px 0px;}
+.DCont .picBox{ background:#71cef0; padding:3px; -moz-border-radius:3px; -webkit-border-radius:3px; float:left;}
+.msgCnt,.msgBox{ word-wrap:break-word;word-break:break-all;}
+
+/*转播的情况*/
+.replyBox .msgBox{ margin:10px 0px; padding:8px 20px; border:1px solid #B6B7B7; -moz-border-radius:5px; -webkit-border-radius:5px;}
+/*固定高带图片的情况*/
+.LC li.limit .mbPic img{ height:120px; width:120px;}
+.mbPic img { -moz-border-radius:4px; -webkit-border-radius:4px; border:1px solid #CCCCCC; cursor:pointer; float:right; padding:3px;}
+.LC li .mbPic,.LC li.pic .mbPic,.LC li.zb .mbPic{ display:none;}
+.LC li.limit .mbPic{ display:block; float:right; height:130px; width:130px; margin:5px 0px 0px 10px;}
+
+/*工具条*/
+.control_area{ width:910px; margin:0px auto; position:relative;}
+.control_area .bg{ width:100%; height:100%; background:#FFFFFF; opacity:0.3; -moz-border-radius:5px 5px 0px 0px; -webkit-border-radius:5px 5px 0px 0px; filter:alpha(opacity=30); position:absolute; top:0px; left:0px;}
+.undis{ height:11px; background:url(../images/tools-undis.png) no-repeat center top; cursor:pointer; margin-top:45px; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/tools-undis.png');}
+.dis{ height:61px; background:url(../images/tools-dis.png) no-repeat center top; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/tools-dis.png'); }
+.dis a,.rightControl a{ display:block; background:url(../images/button.png) no-repeat; height:37px; overflow:hidden; line-height:300px; position:relative; z-index:3; width:104px; margin:8px 15px 0px; float:left; cursor:pointer; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/control-btn-d.png');}
+.dis a.vote{ background-position:0px -42px;}
+.dis a.start,.dis a.pre,.dis a.next{ background-position:0px -84px; width:86px; float:right; line-height:36px; font-size:22px; font-weight:bold; color:#FFFFFF; text-align:center;}
+
+/*右侧工具条*/
+div.rightControl{ position:relative; width:920px; height:0px; margin:0px auto; overflow:visible;}
+.rightControl ul{ position:absolute; right:-155px; bottom:10px;}
+.rightControl a{ position:static; width:100px; height:106px; clear:both;}
+.rightControl a.vote{ background-position:2px -125px;}
+.rightControl a{ background-position:2px -233px;}
+.rightControl a.pre{ background-position:2px -341px; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/up.png');}
+.rightControl a.next{ background-position:2px -447px; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/down.png');}
+.rightControl a.start{ background-position:0px -560px; height:100px; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/play.png');}
+.rightControl a.pause{ background-position:0px -667px; height:100px; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/pause.png');}
+
+
+
+/* 单条弹出 */
+.D .bg{ height:100%; left:0; position:absolute; top:0; width:100%;}
+.D .bg .bgCover{ background:#000000; width:1280px; height:768px; margin:0 auto; opacity:0.6; filter:alpha(opacity=60);}
+.D .CR{ left:50%; margin:119px 0 0 -460px; position:absolute; top:0px; width:920px;}
+.D .DWrap{ width:920px; height:593px;}
+.DWrap li{ height:482px; font-size:36px; *margin-left:-15px;}
+/* 单条弹出-图片 */
+.imgPopup{ height:100%; left:0; position:absolute; text-align:center; top:0; width:100%; z-index:10006;}
+.blockLayer{background:none repeat scroll 0 0 #000000; height:100%; left:0; opacity:0.7; filter:alpha(opacity=70);  position:absolute; top:0; width:100%; z-index:10001;}
+.imgPopup .bigPicBox{ border-left:1px solid #B6B7B7; height:100%; margin:0 auto; min-height:125px; height:auto!important; _height:125px; text-align:center; padding-top:139px;}
+.bigPicBox img{ position:relative; z-index:10003; text-align:center; padding:2px; border:1px solid #B6B7B7; -moz-border-radius:5px; -webkit-border-radius:5px; max-width:725px;}
+
+/*抽奖*/
+.luck input{ display:block; width:162px; height:47px; text-indent:-9999px; overflow:hidden; margin:10px auto 0px; border:none; cursor:pointer; position:relative;}
+.luck input.LuckStart{ background:url(../images/luckButton-s.png) no-repeat; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/luckButton-s.png');}
+.luck input.LuckEnd{ background:url(../images/luckButton-e.png) no-repeat; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/luckButton-e.png');}
+.luck input.LuckStart-d{ background:url(../images/luckButton-s-d.png) no-repeat; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/luckButton-s-d.png');}
+.luck input.LuckEnd-d{ background:url(../images/luckButton-e-d.png) no-repeat; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/luckButton-e-d.png');}
+.luck a:hover{ text-decoration:none;}
+.talkBox{ width:920px; height:540px; overflow:hidden; position:relative;}
+.talkBox table{ vertical-align:middle; height:540px;}
+.talkBox .ing{ vertical-align:top;}
+.talkBox td{ font-size:38px;}
+.talkBox .talkList{ height:auto; margin:0px auto;}
+.talkBox li{ position:relative;}
+.luckIcon{ position:absolute; top:-2px; left:-2px; background:url(../images/luckIcon.png) no-repeat; _background:none; _filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=crop,src='../images/luckIcon.png'); width:92px; height:93px;}
+
+
+/* 微博墙需要隐藏的内容 */
+.pubInfo,.LC li.limit .picWrap,.DWrap .DTitle,.DWrap .DClose,.DWrap .DLoad,.undis a{ display:none;}
+
+/*fixed IE6*/
+.LC li{ _float:left; _width:854px; _background-position:left top;}
+.msgBox{ _float:left; _margin:0px 0px 0px 20px;}}
