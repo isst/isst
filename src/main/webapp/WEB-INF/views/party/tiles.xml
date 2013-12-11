@@ -3,32 +3,24 @@
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
 <tiles-definitions>
-  <definition name="header" template="/WEB-INF/views/party/header.jsp"></definition>
-  
-  <definition name="layout" template="/WEB-INF/views/party/layout.jsp">
-    <put-attribute name="title" value="" />
-    <put-attribute name="header" value="header" />
-    <put-attribute name="body" value="" />
-  </definition>
-  
-  <definition name="layout-main" template="/WEB-INF/views/party/layout-main.jsp">
-    <put-attribute name="title" value="" />
-    <put-attribute name="header" value="header" />
+  <definition name="page.layout" template="/WEB-INF/views/party/layout/page.jsp">
+    <put-attribute name="head" value="/WEB-INF/views/party/block/head.jsp" />
     <put-attribute name="content" value="" />
+    <put-attribute name="footer" value="/WEB-INF/views/party/block/navbar.jsp" />
   </definition>
   
-  <definition name="login" extends="layout">  
-    <put-attribute name="title" value="登录" />  
-    <put-attribute name="body" value="/WEB-INF/views/party/login.jsp" />
-   </definition>
+  <definition name="login.page" template="/WEB-INF/views/party/page/login.jsp">  
+    <put-attribute name="head" value="/WEB-INF/views/party/block/head.jsp" />
+  </definition>
    
-   <definition name="spittles" extends="layout-main">  
-    <put-attribute name="title" value="评论列表" />  
-    <put-attribute name="content" value="/WEB-INF/views/party/spittles.jsp" />
-   </definition>
+  <definition name="*.page" extends="page.layout">
+    <put-attribute name="script" value="/WEB-INF/views/party/block/logged.jsp"  />
+    <put-attribute name="content" value="/WEB-INF/views/party/page/{1}.jsp"  />
+  </definition>
    
-   <definition name="admin" extends="layout-main">  
-    <put-attribute name="title" value="系统设置" />  
-    <put-attribute name="content" value="/WEB-INF/views/party/admin.jsp" />
-   </definition>
+  <definition name="*.dialog" template="/WEB-INF/views/party/layout/dialog.jsp">
+    <put-attribute name="head" value="/WEB-INF/views/party/block/head.jsp" />
+    <put-attribute name="script" value="/WEB-INF/views/party/block/logged.jsp"  />
+    <put-attribute name="body" value="/WEB-INF/views/party/dialog/{1}.jsp"  />
+  </definition>
 </tiles-definitions>

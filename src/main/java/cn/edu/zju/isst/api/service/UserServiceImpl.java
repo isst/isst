@@ -26,18 +26,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(int userId) {
-        //TODO
-        User user = userDao.getUserById(userId);
-        return user;
+        return userDao.getUserById(userId);
     }
 
     @Override
     public ResultHolder updateNickname(int userId, String nickname) {
-        User user = userDao.getUserById(userId);
-        if (userDao.updateNickname(user) == false) {
-            return new ResultHolder("error");
-        } else
-            return new ResultHolder("success");
+        if (userDao.updateNickname(userId, nickname)) {
+            return new ResultHolder(userId);
+        } else {
+            return new ResultHolder(0);
+        }
     }
-
 }

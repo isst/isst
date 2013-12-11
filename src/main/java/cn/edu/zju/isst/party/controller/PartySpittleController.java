@@ -14,6 +14,6 @@ public class PartySpittleController extends BaseController {
         if (user.getId() == 0) {
             return "redirect:login.html";
         }
-        return "spittles";
+        return "spittles.page";
     }
 }

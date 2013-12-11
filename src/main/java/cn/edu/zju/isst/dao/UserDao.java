@@ -50,15 +50,11 @@ public class UserDao {
         return users.get(0);
     }
 
-    public boolean updateNickname(User user) {
+    public boolean updateNickname(int userId, String nickname) {
         String sql = "UPDATE user SET nickname=? WHERE id=?";
-        int resultInt = jdbcTemplate.update(sql,
-                new Object[] { user.getId(), user.getName(), user.getPassword(), user.getType(), user.getFullname(),
-                        user.getNickname() });
-        if (resultInt > 0) {
-            return true;
-        }
-        return false;
+        jdbcTemplate.update(sql, new Object[] {nickname, userId});
+        
+        return true;
     }
 
     private RowMapper<User> getUserRowMapper() {

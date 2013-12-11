@@ -23,10 +23,9 @@ public class SpittleController {
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
     List<Spittle> retrieve(@PathVariable("userId") int userId,
-            @RequestParam(value = "order", required = false, defaultValue = "post_time") String order,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
             @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
-        return spittleService.retrieve(userId, order, page, pageSize);
+        return spittleService.retrieve(userId, "post_time", page, pageSize);
     }
 
     @RequestMapping(method = RequestMethod.POST)

@@ -30,9 +30,9 @@ public class UserController {
 		return userService.get(userId);
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT)
+	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public @ResponseBody
-    ResultHolder updateNickname(@PathVariable("userId") int userId, @RequestParam("nickname") String nickname) {
+    ResultHolder updateNickname(@PathVariable("id") int userId, @RequestParam("nickname") String nickname) {
 		return userService.updateNickname(userId, nickname);
 	}
       

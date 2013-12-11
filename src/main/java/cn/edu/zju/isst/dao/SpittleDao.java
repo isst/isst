@@ -21,7 +21,7 @@ public class SpittleDao {
     private JdbcTemplate jdbcTemplate;
 
     public Spittle get(int id) {
-        String sql = "SELECT * FROM user WHERE id=?";
+        String sql = "SELECT * FROM yd_spittle WHERE id=?";
         List<Spittle> spittles = jdbcTemplate.query(sql, new Object[] { id }, ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
         if (spittles.isEmpty()) {
             return null;
@@ -63,6 +63,9 @@ public class SpittleDao {
         } else if (order.equals("dislikes")) {
             sql.append(" ORDER BY s.dislikes DESC");
         }
+        
+        int offset = page == 0 ? 0 : ((page - 1) * pageSize);
+        sql.append(" LIMIT ").append(offset).append(", ").append(pageSize);
         
         List<Spittle> spittles = jdbcTemplate.query(sql.toString(), ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
         return spittles;

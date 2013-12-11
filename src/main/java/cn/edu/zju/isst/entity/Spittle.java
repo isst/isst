@@ -13,7 +13,7 @@ public class Spittle {
     private int user_id;
 
     @NotNull(message = "Content must not be null")
-    @Size(min = 15, max = 200, message = "Content must be between 15 and 200 characters long.")
+    @Size(min = 5, max = 200, message = "Content must be between 5 and 200 characters long.")
     private String content;
 
     private long post_time;

@@ -31,9 +31,9 @@ public class PartyAdminController extends BaseController {
     @RequestMapping(value="/admin.html", method=RequestMethod.GET)
     public String index(@ModelAttribute("user") User user) {
         if (user.getId() == 1) {
-            return "admin";
+            return "admin.page";
         }
-        return "admin";
+        return "admin.page";
         //return "redirect:index.html";
     }
     
