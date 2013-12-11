@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.edu.zju.isst.api.service.SpittleService;
 import cn.edu.zju.isst.entity.ResultHolder;
-import cn.edu.zju.isst.entity.Spittle;
+import cn.edu.zju.isst.entity.UserSpittle;
 
 @Controller
 @RequestMapping("/users/{userId}/spittles")
@@ -22,10 +22,19 @@ public class SpittleController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody
-    List<Spittle> retrieve(@PathVariable("userId") int userId,
+    List<UserSpittle> retrieve(@PathVariable("userId") int userId,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize) {
-        return spittleService.retrieve(userId, "post_time", page, pageSize);
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
+            @RequestParam(value = "id", required = false, defaultValue = "0") int id) {
+        return spittleService.retrieve(userId, "post_time", page, pageSize, id);
+    }
+
+    @RequestMapping(value = "/likes")
+    public @ResponseBody
+    List<UserSpittle> retrieveLikes(@PathVariable("userId") int userId,
+            @RequestParam(value = "isLike", required = false, defaultValue = "0") int isLike,
+            @RequestParam(value = "count", required = false, defaultValue = "20") int count) {
+        return spittleService.retrieve(userId, isLike == 0 ? "dislikes" : "likes", 0, count, 0);
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -43,7 +52,7 @@ public class SpittleController {
     @RequestMapping(value = "/{id}/likes", method = RequestMethod.POST)
     public @ResponseBody
     ResultHolder like(@PathVariable("userId") int userId, @PathVariable("id") int spittleId,
-            @RequestParam("like") int isLike) {
+            @RequestParam("isLike") int isLike) {
         return spittleService.like(userId, spittleId, isLike);
     }
 }

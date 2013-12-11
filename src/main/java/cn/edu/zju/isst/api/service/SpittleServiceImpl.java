@@ -10,6 +10,7 @@ import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Spittle;
 import cn.edu.zju.isst.entity.User;
+import cn.edu.zju.isst.entity.UserSpittle;
 import cn.edu.zju.isst.pushlet.PushingSpittle;
 import cn.edu.zju.isst.pushlet.SpittleEventPullSource;
 
@@ -22,8 +23,8 @@ public class SpittleServiceImpl implements SpittleService {
     private static int defaultYear = 2013;
 
     @Override
-    public List<Spittle> retrieve(int userId, String order, int page, int pageSize) {
-        return spittleDao.retrieve(userId, order, page, pageSize);
+    public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
+        return spittleDao.retrieve(userId, order, page, pageSize, id);
     }
 
     @Override
@@ -60,19 +61,26 @@ public class SpittleServiceImpl implements SpittleService {
     
     @Override
     public ResultHolder delete(int userId, int spittleId) {
-        // TODO Auto-generated method stub
-        return null;
+        Spittle spittle = spittleDao.get(spittleId);
+        if (spittle.getUserId() == userId) {
+            spittleDao.delete(spittleId);
+            return new ResultHolder();
+        } else {
+            return new ResultHolder("无权限删除");
+        }
     }
 
     @Override
     public ResultHolder like(int userId, int spittleId, int isLike) {
-        // TODO Auto-generated method stub
-        return null;
+        if (spittleDao.like(userId, spittleId, isLike)) {
+            return new ResultHolder();
+        } else {
+            return new ResultHolder("请勿重复操作");
+        }
     }
 
     @Override
     public Spittle get(int id) {
-        
-        return null;
+        return spittleDao.get(id);
     }
 }

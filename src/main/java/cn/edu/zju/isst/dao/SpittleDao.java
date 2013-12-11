@@ -12,14 +12,19 @@ import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import cn.edu.zju.isst.entity.Spittle;
+import cn.edu.zju.isst.entity.User;
+import cn.edu.zju.isst.entity.UserSpittle;
 
 @Repository
 public class SpittleDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-
+    @Autowired
+    private UserDao userDao;
+    
     public Spittle get(int id) {
         String sql = "SELECT * FROM yd_spittle WHERE id=?";
         List<Spittle> spittles = jdbcTemplate.query(sql, new Object[] { id }, ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
@@ -50,10 +55,20 @@ public class SpittleDao {
         return id;
     }
 
-    public List<Spittle> retrieve(int userId, String order, int page, int pageSize) {
-        StringBuilder sql = new StringBuilder("SELECT * FROM yd_spittle s");
+    public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
+        StringBuilder sql = new StringBuilder("SELECT s.*, su.is_like FROM yd_spittle s LEFT JOIN yd_spittle_user su ON s.id=su.spittle_id");
+        StringBuilder where = new StringBuilder();
+        
         if (order == null || order.equals("")) {
             order = "post_time";
+        }
+        
+        if (id > 0) {
+            where.append(" s.id>").append(id);
+        }
+        
+        if (where.length() > 0) {
+            sql.append(" WHERE").append(where);
         }
         
         if (order.equals("post_time")) {
@@ -66,12 +81,41 @@ public class SpittleDao {
         
         int offset = page == 0 ? 0 : ((page - 1) * pageSize);
         sql.append(" LIMIT ").append(offset).append(", ").append(pageSize);
+        List<UserSpittle> spittles = jdbcTemplate.query(sql.toString(), ParameterizedBeanPropertyRowMapper.newInstance(UserSpittle.class));
+        for (UserSpittle spittle : spittles) {
+            User user = userDao.getUserById(spittle.getUserId());
+            if (null != user) {
+                spittle.setNickname(user.getNickname());
+            }
+        }
         
-        List<Spittle> spittles = jdbcTemplate.query(sql.toString(), ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
         return spittles;
     }
     
     public List<Spittle> retrieve() {
-        return retrieve(0, "post_time", 0, 0);
+        String sql = "SELECT * FROM yd_spittle ORDER BY id DESC";
+        return jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
+    }
+    
+    @Transactional
+    public boolean delete(int spittleId) {
+        jdbcTemplate.update("DELETE FROM yd_spittle WHERE id=?", new Object[] {spittleId});
+        jdbcTemplate.update("DELETE FROM yd_spittle_user WHERE spittle_id=?", new Object[] {spittleId});
+        
+        return true;
+    }
+    
+    @Transactional
+    public boolean like(int userId, int spittleId, int isLike) {
+        String countSQL = "SELECT COUNT(id) FROM yd_spittle_user WHERE user_id=? AND spittle_id=?";
+        int count = jdbcTemplate.queryForObject(countSQL, new Object[] {userId, spittleId}, Integer.class);
+        if (count > 0) {
+            return false;
+        }
+        
+        String sql = "INSERT INTO yd_spittle_user (user_id, spittle_id, is_like) VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql, new Object[] {userId, spittleId, isLike});
+        
+        return true;
     }
 }

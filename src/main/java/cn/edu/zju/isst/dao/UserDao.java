@@ -4,7 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,7 +22,8 @@ public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
     private final static String passwordSalt = "poaerq~!";
-
+    private Map<Integer, User> cachedUsers = new HashMap<Integer, User>();
+    
     public User getUserByName(String name) {
         String sql = "SELECT * FROM user WHERE name=?";
         List<User> users = jdbcTemplate.query(sql, new Object[] { name }, getUserRowMapper());
@@ -41,18 +44,28 @@ public class UserDao {
         return password;
     }
 
-    public User getUserById(int userId) {
+    public User getUserById(Integer userId) {
+        if (cachedUsers.containsKey(userId)) {
+            return cachedUsers.get(userId);
+        }
+        
         String sql = "SELECT * FROM user WHERE id=?";
         List<User> users = jdbcTemplate.query(sql, new Object[] { userId }, getUserRowMapper());
+        
         if (users.isEmpty()) {
             return null;
         }
-        return users.get(0);
+        
+        User user = users.get(0);
+        cachedUsers.put(userId, user);
+        
+        return user;
     }
 
     public boolean updateNickname(int userId, String nickname) {
         String sql = "UPDATE user SET nickname=? WHERE id=?";
         jdbcTemplate.update(sql, new Object[] {nickname, userId});
+        cachedUsers.remove(userId);
         
         return true;
     }
