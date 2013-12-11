@@ -44,9 +44,10 @@ public class UserDao {
         return password;
     }
 
-    public User getUserById(Integer userId) {
-        if (cachedUsers.containsKey(userId)) {
-            return cachedUsers.get(userId);
+    public User getUserById(int userId) {
+        Integer uid = Integer.valueOf(userId);
+        if (cachedUsers.containsKey(uid)) {
+            return cachedUsers.get(uid);
         }
         
         String sql = "SELECT * FROM user WHERE id=?";
@@ -57,7 +58,7 @@ public class UserDao {
         }
         
         User user = users.get(0);
-        cachedUsers.put(userId, user);
+        cachedUsers.put(uid, user);
         
         return user;
     }
