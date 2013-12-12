@@ -115,11 +115,11 @@ $(function() {
 			var $li = $ul.find('li:first');
 			var liHeight = $li.outerHeight(true);
 			$ul.animate({marginTop : (liHeight*-1) +"px"}, 10, function(){
-				$ul.css({marginTop:0});
 				$li.appendTo($ul);
 				setTimeout(doScrolling, 10);
 			});
 		} else {
+			$ul.css({marginTop:0});
 			$overlay.show();
 			popWinner($ul.find("li:first"));
 		}
