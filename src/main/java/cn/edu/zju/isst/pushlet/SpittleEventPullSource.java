@@ -8,6 +8,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.json.JSONObject;
 
+import cn.edu.zju.isst.api.service.SpittleServiceImpl;
+
 import nl.justobjects.pushlet.core.Event;
 import nl.justobjects.pushlet.core.EventPullSource;
 
@@ -17,6 +19,7 @@ public class SpittleEventPullSource extends EventPullSource implements Serializa
     private static ConcurrentLinkedQueue<PushingSpittle> normalQueue = new ConcurrentLinkedQueue<PushingSpittle>();
     
     private static SpittleEventPullSource instance;
+    private boolean orderByLikes = false;
     
     public SpittleEventPullSource() {
         super();
@@ -71,7 +74,7 @@ public class SpittleEventPullSource extends EventPullSource implements Serializa
     
     @Override
     protected long getSleepTime() {
-        return 6000;
+        return 7000;
     }
 
     @Override
@@ -85,7 +88,12 @@ public class SpittleEventPullSource extends EventPullSource implements Serializa
         if (spittle != null) {
             JSONObject json = new JSONObject(spittle);
             event.setField("spittle", json.toString());
-            normalQueue.add(spittle);
+        } else {
+            SpittleServiceImpl ssi = SpittleServiceImpl.getInstance();
+            if (null != ssi) {
+                addQueue(ssi.retrievePushingSpittles(orderByLikes));
+                orderByLikes = !orderByLikes;
+            }
         }
         
         return event;

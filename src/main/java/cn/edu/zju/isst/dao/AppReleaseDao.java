@@ -20,6 +20,11 @@ public class AppReleaseDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     
+    public List<AppRelease> retrieve(int type) {
+        String sql = "SELECT * FROM app_release WHERE type=? ORDER BY build DESC";
+        return jdbcTemplate.query(sql, new Object[] {type}, ParameterizedBeanPropertyRowMapper.newInstance(AppRelease.class));
+    }
+    
     public int create(final AppRelease app) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {

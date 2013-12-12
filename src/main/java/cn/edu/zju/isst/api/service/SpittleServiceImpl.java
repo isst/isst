@@ -1,5 +1,6 @@
 package cn.edu.zju.isst.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,16 @@ public class SpittleServiceImpl implements SpittleService {
     @Autowired
     private UserDao userDao;
     private static int defaultYear = 2013;
-
+    private static SpittleServiceImpl instance;
+    
+    public SpittleServiceImpl() {
+        instance = this;
+    }
+    
+    public static SpittleServiceImpl getInstance() {
+        return instance;
+    }
+    
     @Override
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
         return spittleDao.retrieve(userId, order, page, pageSize, id);
@@ -82,5 +92,17 @@ public class SpittleServiceImpl implements SpittleService {
     @Override
     public Spittle get(int id) {
         return spittleDao.get(id);
+    }
+    
+    public List<PushingSpittle> retrievePushingSpittles(boolean orderByLikes) {
+        List<PushingSpittle> pushingSpittles = new ArrayList<PushingSpittle>();
+        for (Spittle spittle : spittleDao.retrieve(0, orderByLikes ? "likes" : "dislikes", 0, 20, 0)) {
+            User user = userDao.getUserById(spittle.getUserId());
+            if (user != null) {
+                pushingSpittles.add(new PushingSpittle(user, spittle));
+            }
+        }
+        
+        return pushingSpittles;
     }
 }

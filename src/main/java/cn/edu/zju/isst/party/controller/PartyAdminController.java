@@ -37,7 +37,6 @@ public class PartyAdminController extends BaseController {
     public String index(Model model, @ModelAttribute("user") LoggedUser user) {
         if (user.getId() == 1) {
             model.addAttribute("shows", showDao.retrieve(2013));
-            
             return "admin.page";
         }
         return "redirect:index.html";
