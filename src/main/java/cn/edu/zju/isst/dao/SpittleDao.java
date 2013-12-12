@@ -122,6 +122,12 @@ public class SpittleDao {
         String sql = "INSERT INTO yd_spittle_user (user_id, spittle_id, is_like) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, new Object[] {userId, spittleId, isLike});
         
+        StringBuilder updateSql = new StringBuilder("UPDATE yd_spittle SET ");
+        String updateField = isLike == 0 ? "dislikes" : "likes";
+        updateSql.append(updateField).append("=").append(updateField).append("+1");
+        updateSql.append(" WHERE id=?");
+        jdbcTemplate.update(updateSql.toString(), new Object[] {spittleId});
+        
         return true;
     }
 }

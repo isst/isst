@@ -110,11 +110,12 @@ $(function() {
 		$('.prize-start').removeClass("prize-start");
 	});
 	
+	var currentMarginTop = 0;
 	function doScrolling() {
 		if (isScrolling) {
 			var $li = $ul.find('li:first');
-			var liHeight = $li.outerHeight(true);
-			$ul.animate({marginTop : (liHeight*-1) +"px"}, 10, function(){
+			currentMarginTop -= $li.outerHeight(true);
+			$ul.animate({marginTop : currentMarginTop +"px"}, 30, function(){
 				$li.appendTo($ul);
 				setTimeout(doScrolling, 10);
 			});
