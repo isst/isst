@@ -63,11 +63,11 @@ public class Show {
         this.status = status;
     }
 
-    public int getSort_num() {
+    public int getSortNum() {
         return sort_num;
     }
 
-    public void setSort_num(int sort_num) {
-        this.sort_num = sort_num;
+    public void setSortNum(int sortNum) {
+        this.sort_num = sortNum;
     }
 }

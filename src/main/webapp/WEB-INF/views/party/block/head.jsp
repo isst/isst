@@ -60,10 +60,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$.isst.api.post('/users/validation', {name: name, password: password}, callback);
 			},
 			postSpittle: function(content, callback) {
-				$.isst.api.put('/users/'+ $.isst.userId +'/spittles', {content: content}, callback);
+				$.isst.api.post('/users/'+ $.isst.userId +'/spittles', {content: content}, callback);
 			},
 			updateNickname: function(nickname, callback) {
 				$.isst.api.put('/users/'+ $.isst.userId, {nickname: nickname}, callback);
+			},
+			getShows: function(callback) {
+				$.isst.api.get('/users/'+$.isst.userId+'/shows', {}, callback);
+			},
+			showVote: function(showId, callback) {
+				$.isst.api.post('/users/'+ $.isst.userId +'/shows/'+ showId +'/votes', {}, callback);
 			}
 		};
 	</script>

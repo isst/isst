@@ -30,7 +30,11 @@ public class UserDao {
         if (users.isEmpty()) {
             return null;
         }
-        return users.get(0);
+        
+        User user = users.get(0);
+        cachedUsers.put(Integer.valueOf(user.getId()), user);
+        
+        return user;
     }
 
     public String encryptPassword(String password) {

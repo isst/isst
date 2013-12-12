@@ -41,7 +41,7 @@
 		    </form>
 	  </div>
   	<div data-role="footer" data-position="fixed" data-theme="a">
-  		<h1>©2013&nbsp;&nbsp;ISST项目组（http://zjucst.com/isst）</h1>
+  		<h1>©2013&nbsp;&nbsp;ISST项目组</h1>
   	</div>
 </div>
 </body>

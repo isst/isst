@@ -11,22 +11,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.edu.zju.isst.api.service.ShowService;
 import cn.edu.zju.isst.entity.ResultHolder;
-import cn.edu.zju.isst.entity.Show;
+import cn.edu.zju.isst.entity.UserShowVote;
 
 @Controller
 public class ShowController {
 	@Autowired
     private ShowService showService;
 	
-	@RequestMapping(value="/shows", method = RequestMethod.GET)
+	@RequestMapping(value="/users/{userId}/shows", method = RequestMethod.GET)
     public @ResponseBody
-	List<Show> retrieve() {
-		return showService.retrieve();
+	List<UserShowVote> retrieve(@PathVariable("userId") int userId) {
+		return showService.retrieveForUser(userId);
 	}
 	
-	@RequestMapping(value = "/users/{userId}/shows/{id}",method = RequestMethod.POST)
+	@RequestMapping(value = "/users/{userId}/shows/{showId}/votes",method = RequestMethod.POST)
     public @ResponseBody
-    ResultHolder vote(@PathVariable("userId") int userId, @PathVariable("id") int showId) {
+    ResultHolder vote(@PathVariable("userId") int userId, @PathVariable("showId") int showId) {
 		return showService.vote(userId, showId);
 	}
 }

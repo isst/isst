@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import cn.edu.zju.isst.dao.UserDao;
-import cn.edu.zju.isst.entity.User;
+import cn.edu.zju.isst.entity.LoggedUser;
 
 @Controller
 public class PartyUserController extends BaseController {
@@ -21,7 +21,7 @@ public class PartyUserController extends BaseController {
     private UserDao userDao;
     
     @RequestMapping("/login.html")
-    public String login(@ModelAttribute("user") User user, Model model) {
+    public String login(@ModelAttribute("user") LoggedUser user, Model model) {
         if (user.getId() > 0) {
             return "redirect:index.html";
         }
@@ -32,7 +32,7 @@ public class PartyUserController extends BaseController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void loginPost(HttpSession session, @RequestParam("id") int id) {
-        session.setAttribute(USER_SESSION_KEY, userDao.getUserById(id));
+        session.setAttribute(USER_SESSION_KEY, new LoggedUser(userDao.getUserById(id)));
     }
 
     @RequestMapping(value = "/logout")
@@ -42,7 +42,7 @@ public class PartyUserController extends BaseController {
     }
 
     @RequestMapping(value = "/nickname.html")
-    public String loginPost(@ModelAttribute("user") User user, Model model) {
+    public String loginPost(@ModelAttribute("user") LoggedUser user, Model model) {
         if (user.getId() == 0) {
             return "redirect:login.html";
         }

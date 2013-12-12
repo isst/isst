@@ -29,8 +29,8 @@ public class SpittleServiceImpl implements SpittleService {
 
     @Override
     public ResultHolder post(int userId, String content) {
-        if (userId == 0) {
-            return new ResultHolder("用户未登录");
+        if (userDao.getUserById(userId) == null) {
+            return new ResultHolder("用户不存在");
         }
         
         if (content == null || content.length() < 5 || content.length() > 200) {

@@ -3,6 +3,11 @@ package cn.edu.zju.isst.entity;
 public class User {
     private int id = 0;
     private String name;
+    private String fullname;
+    private String password;
+    private int type = 0;
+    private String nickname;
+
     public String getName() {
         return name;
     }
@@ -10,11 +15,6 @@ public class User {
     public void setName(String name) {
         this.name = name;
     }
-
-    private String fullname;
-    private String password;
-    private int type = 0;
-    private String nickname;
 
     public int getType() {
         return type;

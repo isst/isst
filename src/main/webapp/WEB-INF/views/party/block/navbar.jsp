@@ -9,8 +9,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<li>
 			<a href="<%=basePath%>party/spittles.html" data-icon="grid" class="${activeNav == 'spittles' ? 'ui-btn-active ui-state-persist' : ''}">评论列表</a>
 		</li>
-		<li><a href="<%=basePath%>party/spittles.html"  class="${activeNav == 'shows' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="check">节目评分</a></li>
-		<li><a href="<%=basePath%>party/spittles.html"  class="${activeNav == 'lottery' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="star">奖品说明</a></li>
+		<li><a href="<%=basePath%>party/shows.html"  class="${activeNav == 'shows' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="check">节目评分</a></li>
+		<li><a href="<%=basePath%>party/spittles.html"  class="${activeNav == 'introduction' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="info">奖品说明</a></li>
+		<li><a href="<%=basePath%>party/spittles.html"  class="${activeNav == 'lottery' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="star">获奖情况</a></li>
 		<c:if test="${user.id==1}">
 			<li><a href="<%=basePath%>party/admin.html"  class="${activeNav == 'admin' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="gear">系统设置</a></li>
 		</c:if>
