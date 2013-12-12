@@ -90,7 +90,7 @@
 	  <artifactId>pushlet</artifactId>
 	  <version>2.0.4</version>
 	  <scope>system</scope>
-	  <systemPath>${project.basedir}/lib/pushlet.jar</systemPath>
+	  <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/pushlet.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>org.json</groupId>

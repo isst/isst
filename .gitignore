@@ -9,3 +9,4 @@
 Thumbs.db
 .DS_Store
 /src/main/webapp/WEB-INF/lib/
+!/src/main/webapp/WEB-INF/lib/pushlet.jar
