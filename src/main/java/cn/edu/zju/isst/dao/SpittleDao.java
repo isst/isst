@@ -56,7 +56,7 @@ public class SpittleDao {
     }
 
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
-        StringBuilder sql = new StringBuilder("SELECT s.*, su.is_like FROM yd_spittle s LEFT JOIN yd_spittle_user su ON s.id=su.spittle_id");
+        StringBuilder sql = new StringBuilder("SELECT s.*, su.is_like FROM yd_spittle s LEFT JOIN yd_spittle_user su ON s.id=su.spittle_id AND su.user_id=?");
         StringBuilder where = new StringBuilder();
         
         if (order == null || order.equals("")) {
@@ -81,7 +81,7 @@ public class SpittleDao {
         
         int offset = page == 0 ? 0 : ((page - 1) * pageSize);
         sql.append(" LIMIT ").append(offset).append(", ").append(pageSize);
-        List<UserSpittle> spittles = jdbcTemplate.query(sql.toString(), ParameterizedBeanPropertyRowMapper.newInstance(UserSpittle.class));
+        List<UserSpittle> spittles = jdbcTemplate.query(sql.toString(), new Object[] {userId}, ParameterizedBeanPropertyRowMapper.newInstance(UserSpittle.class));
         for (UserSpittle spittle : spittles) {
             User user = userDao.getUserById(spittle.getUserId());
             if (null != user) {
@@ -92,9 +92,15 @@ public class SpittleDao {
         return spittles;
     }
     
-    public List<Spittle> retrieve() {
-        String sql = "SELECT * FROM yd_spittle ORDER BY id DESC";
-        return jdbcTemplate.query(sql, ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
+    public List<Spittle> retrieve(int count, String order, boolean desc) {
+        StringBuilder sb = new StringBuilder("SELECT * FROM yd_spittle ORDER BY ");
+        sb.append(order).append(" ").append(desc ? "DESC" : "ASC");
+        
+        if (count > 0) {
+            sb.append(" LIMIT ").append(count);
+        }
+        
+        return jdbcTemplate.query(sb.toString(), ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
     }
     
     @Transactional

@@ -6,12 +6,14 @@ import cn.edu.zju.isst.entity.User;
 public class PushingSpittle {
     private int userId;
     private int spittleId;
+    private String userName;
     private String nickname;
     private String content;
     private long postTime;
 
     public PushingSpittle(User user, Spittle spittle) {
         userId = user.getId();
+        userName = user.getName();
         nickname = user.getNickname();
         spittleId = spittle.getId();
         content = spittle.getContent();
@@ -58,6 +60,14 @@ public class PushingSpittle {
         this.postTime = postTime;
     }
     
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public String toString() {
         return nickname + ": " + content;
     }

@@ -95,8 +95,12 @@ public class SpittleServiceImpl implements SpittleService {
     }
     
     public List<PushingSpittle> retrievePushingSpittles(boolean orderByLikes) {
+        return retrievePushingSpittles(20, orderByLikes ? "likes" : "dislikes", true);
+    }
+    
+    public List<PushingSpittle> retrievePushingSpittles(int count, String order, boolean desc) {
         List<PushingSpittle> pushingSpittles = new ArrayList<PushingSpittle>();
-        for (Spittle spittle : spittleDao.retrieve(0, orderByLikes ? "likes" : "dislikes", 0, 20, 0)) {
+        for (Spittle spittle : spittleDao.retrieve(count, order, desc)) {
             User user = userDao.getUserById(spittle.getUserId());
             if (user != null) {
                 pushingSpittles.add(new PushingSpittle(user, spittle));
@@ -104,5 +108,9 @@ public class SpittleServiceImpl implements SpittleService {
         }
         
         return pushingSpittles;
+    }
+    
+    public List<PushingSpittle> retrievePushingSpittles() {
+        return retrievePushingSpittles(0, "post_time", true);
     }
 }

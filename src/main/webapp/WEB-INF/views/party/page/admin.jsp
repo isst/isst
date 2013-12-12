@@ -8,16 +8,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <c:set var="activeNav" value="admin" scope="request" />
 
 <div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-collapsed="true" data-content-theme="c">
-	<h3>队列</h3>
-	<p>
-		<label>普通队列中条数：</label>
-		<label class="ui-li-count" id="admin-queue-count">0</label>
-	</p>
-	<input type="button" id="initSpittleQueue" value="初始化队列" data-theme="c" data-inline="true" />
-	<input type="button" id="updateSpittleQueueCount" value="更新队列" data-theme="c" data-inline="true" />
-</div>
-
-<div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-collapsed="true" data-content-theme="c">
 	<h3>节目单</h3>
 	<ul data-role="listview" data-count-theme="c" data-inset="true" id="show-list">
 		<c:forEach var="show" items="${shows}">
@@ -34,19 +24,3 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <a href="<%=basePath%>party/showForm.html" data-rel="dialog" data-role="button" data-theme="b">添加节目</a>
 </c:if>
 </div>
-
-<script type="text/javascript">
-$(function() {
-	$('#initSpittleQueue').click(function() {
-		$.getJSON($.isst.party.createUrl("admin/pushAllSpittles"), function(response) {
-			$('#admin-queue-count').text(response.size);
-		});
-	});
-	
-	$('#updateSpittleQueueCount').click(function() {
-		$.getJSON($.isst.party.createUrl("admin/spittleQueueSize"), function(response) {
-			$('#admin-queue-count').text(response.size);
-		});
-	}).click();
-});
-</script>

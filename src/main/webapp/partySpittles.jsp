@@ -30,10 +30,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         </div>
     </div>
         <div class="control_area undis" id="control_area">
-        <a href="javascript:void(0);" class="next" id="toNext" style="visibility:hidden;">下一条</a>
-        <a href="javascript:void(0);" class="pre" id="toPrev" style="visibility:hidden;">上一条</a>
+        <a href="<%=basePath%>partyLottery.jsp" class="lottery" id="lottery" >抽奖</a>
         <a href="javascript:void(0);" class="start" id="pause" >暂停</a>
-        <a href="javascript:void(0);" class="lottery" id="lottery" >抽奖</a>
         <div class="bg"></div>
     </div>
     </div>
