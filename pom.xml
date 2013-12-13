@@ -93,6 +93,13 @@
 	  <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/pushlet.jar</systemPath>
     </dependency>
     <dependency>
+	  <groupId>bccs</groupId>
+	  <artifactId>bccs-api</artifactId>
+	  <version>1.0</version>
+	  <scope>system</scope>
+	  <systemPath>${project.basedir}/src/main/webapp/WEB-INF/lib/bccs-api-lib-1.0.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
       <version>20131018</version>
