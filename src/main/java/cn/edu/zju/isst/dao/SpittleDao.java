@@ -64,7 +64,7 @@ public class SpittleDao {
         }
         
         if (id > 0) {
-            where.append(" s.id>").append(id);
+            where.append(" s.id<=").append(id);
         }
         
         if (where.length() > 0) {
