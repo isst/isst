@@ -49,18 +49,29 @@ public class SpittleDao {
     
     @Transactional
     public PushingSpittle getPushingSpittle() {
+        PushingSpittle pushingSpittle = getFirstPushingSpittle();
+        
+        if (pushingSpittle == null) {
+            String resetSql = "UPDATE yd_spittle SET is_display=0";
+            jdbcTemplate.update(resetSql);
+            pushingSpittle = getFirstPushingSpittle();
+        }
+        
+        if (null != pushingSpittle) {
+            String updateSql = "UPDATE yd_spittle SET is_display=1 WHERE id=?";
+            jdbcTemplate.update(updateSql, new Object[] {pushingSpittle.getSpittleId()});
+        }
+        
+        return pushingSpittle;
+    }
+    
+    private PushingSpittle getFirstPushingSpittle() {
         String sql = "SELECT * FROM yd_spittle WHERE is_display='0' ORDER BY likes DESC, dislikes ASC, id ASC LIMIT 0, 1";
         List<PushingSpittle> spittles = jdbcTemplate.query(sql, getPushingSpittleRowMapper());
-        
         if (spittles.isEmpty()) {
             return null;
         }
-        
-        PushingSpittle pushingSpittle = spittles.get(0);
-        String updateSql = "UPDATE yd_spittle SET is_display=1 WHERE id=?";
-        jdbcTemplate.update(updateSql, new Object[] {pushingSpittle.getSpittleId()});
-        
-        return pushingSpittle;
+        return spittles.get(0);
     }
     
     public List<PushingSpittle> retrievePushingSpittles() {

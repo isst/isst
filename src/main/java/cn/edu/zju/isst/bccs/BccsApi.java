@@ -6,45 +6,38 @@ import com.baidu.yun.channel.exception.ChannelClientException;
 import com.baidu.yun.channel.exception.ChannelServerException;
 import com.baidu.yun.channel.model.PushBroadcastMessageRequest;
 import com.baidu.yun.channel.model.PushBroadcastMessageResponse;
-import com.baidu.yun.core.log.YunLogEvent;
-import com.baidu.yun.core.log.YunLogHandler;
 
 public class BccsApi {
-    private final static String apiKey = "PqDQfrucX3ubvW7fm0M23gWu";
-    private final static String secretKey = "Drpun8Glo38STs3ayCtxbkEd2nzVLRu3";
-
-    public static void main(String[] args) {
-        pushBroadcastMessage("测试", "百度云推送功能");
-    }
-
-    public static boolean pushBroadcastMessage(String title, String content) {
-        ChannelKeyPair pair = new ChannelKeyPair(apiKey, secretKey);
-
-        BaiduChannelClient channelClient = new BaiduChannelClient(pair);
-
-        channelClient.setChannelLogHandler(new YunLogHandler() {
-            @Override
-            public void onHandle(YunLogEvent event) {
-                System.out.println(event.getMessage());
-            }
-        });
-
+    protected final static String apiKey = "PqDQfrucX3ubvW7fm0M23gWu";
+    protected final static String secretKey = "Drpun8Glo38STs3ayCtxbkEd2nzVLRu3";
+    protected final static ChannelKeyPair channekKeyPair = new ChannelKeyPair(apiKey, secretKey);
+    protected final static BaiduChannelClient channelClient = new BaiduChannelClient(channekKeyPair);
+    
+    public static int pushBroadcastMessage(PushBroadcastMessageRequest request) {
         try {
-            PushBroadcastMessageRequest request = new PushBroadcastMessageRequest();
-            request.setDeviceType(3);
-            request.setMessageType(1);
-            request.setMessage("{\"title\":\"" + title + "\",\"description\":\"" + content + "\"}");
             PushBroadcastMessageResponse response = channelClient.pushBroadcastMessage(request);
-            System.out.println("push amount : " + response.getSuccessAmount());
-            return true;
-
+            return response.getSuccessAmount();
         } catch (ChannelClientException e) {
-            e.printStackTrace();
-            return false;
+            return 0;
         } catch (ChannelServerException e) {
-            return false;
+            return 0;
         }
-
     }
-
+    
+    public static int pushAndroidBroadcastMessage(String messageKey, String message) {
+        PushBroadcastMessageRequest request = new PushBroadcastMessageRequest();
+        request.setMsgKey(messageKey);
+        request.setDeviceType(3);
+        request.setMessage(message);
+        return pushBroadcastMessage(request);
+    }
+    
+    public static int pushAndroidBroadcastMessage(String messageKey, String title, String description) {
+        PushBroadcastMessageRequest request = new PushBroadcastMessageRequest();
+        request.setMsgKey(messageKey);
+        request.setDeviceType(3);
+        request.setMessageType(1);
+        request.setMessage("{\"title\":\"" + title + "\",\"description\":\"" + description + "\"}");
+        return pushBroadcastMessage(request);
+    }
 }

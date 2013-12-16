@@ -24,3 +24,33 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <a href="<%=basePath%>party/showForm.html" data-rel="dialog" data-role="button" data-theme="b">添加节目</a>
 </c:if>
 </div>
+
+<div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-collapsed="true" data-content-theme="c">
+	<h3>推送消息</h3>
+	<div>
+		<input type="text" id="pushMessageTitle" placeholder="请输入标题..." value="" />
+		<textarea id="pushMessageDescription" placeholder="请输入内容..."></textarea>
+		<input type="button" id="pushMessage" value="发送" data-theme="b" />
+	</div>
+</div>
+
+<script type="text/javascript">
+$(function() {
+	var $pushMessageTitle = $("#pushMessageTitle");
+	var $pushMessageDescription = $("#pushMessageDescription");
+	
+	$("#pushMessage").click(function() {
+		var title = $pushMessageTitle.val();
+		var description = $pushMessageDescription.val();
+		
+		if (title && description) {
+			$.post($.isst.party.createUrl("admin/pushMessage"), {title: title, description: description}, function(response) {
+				if (response.code > 0) {
+					$pushMessageTitle.val("");
+					$pushMessageDescription.val("");
+				}
+			});
+		}
+	});
+});
+</script>

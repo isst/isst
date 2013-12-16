@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import cn.edu.zju.isst.bccs.BccsApi;
 import cn.edu.zju.isst.dao.ShowDao;
 import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.entity.LoggedUser;
@@ -30,8 +31,8 @@ public class PartyAdminController extends BaseController {
     private ShowDao showDao;
     @Autowired
     private SpittleDao spittleDao;
- 
-    @RequestMapping(value="/admin.html", method=RequestMethod.GET)
+
+    @RequestMapping(value = "/admin.html", method = RequestMethod.GET)
     public String index(Model model, @ModelAttribute("user") LoggedUser user) {
         if (user.getId() == 1) {
             model.addAttribute("shows", showDao.retrieve(2013));
@@ -39,7 +40,7 @@ public class PartyAdminController extends BaseController {
         }
         return "redirect:index.html";
     }
-    
+
     @RequestMapping(value = "/votes.html")
     public String votes(Model model) {
         List<String> showNames = new ArrayList<String>();
@@ -48,33 +49,46 @@ public class PartyAdminController extends BaseController {
             showNames.add(show.getName());
             showNameMapper.add(show.getId());
         }
-        
+
         model.addAttribute("showNames", new JSONArray(showNames));
         model.addAttribute("showNameMapper", new JSONArray(showNameMapper));
         model.addAttribute("voteData", new JSONObject(showDao.statisticalVote()));
-        
+
         return "votes.html";
     }
-    
+
     @RequestMapping("/admin/getLotterySpittles.json")
-    public @ResponseBody List<PushingSpittle> getLotterySpittles() {
+    public @ResponseBody
+    List<PushingSpittle> getLotterySpittles() {
         return spittleDao.retrievePushingSpittles();
     }
-    
-    public @ResponseBody ResultHolder savePrize(@RequestParam("spittleId") int spittleId) {
-        
+
+    public @ResponseBody
+    ResultHolder savePrize(@RequestParam("spittleId") int spittleId) {
+
         return null;
     }
-    
+
     @RequestMapping(value = "/admin/pausePushing", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void pause() {
         SpittleEventPullSource.pausePushing();
     }
-    
+
     @RequestMapping(value = "/admin/resumePushing", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public void resume() {
         SpittleEventPullSource.resumePushing();
+    }
+
+    @RequestMapping(value = "/admin/pushMessage", method = RequestMethod.POST)
+    public @ResponseBody
+    ResultHolder pushMessage(@ModelAttribute("user") LoggedUser user, @RequestParam("title") String title,
+            @RequestParam("description") String description) {
+        if (user.getId() != 1) {
+            return new ResultHolder("无权限");
+        }
+        int amount = BccsApi.pushAndroidBroadcastMessage("version", title, description);
+        return new ResultHolder(amount);
     }
 }

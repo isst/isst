@@ -114,7 +114,7 @@ $(function() {
 		if (isScrolling) {
 			var $li = $ul.find('li:first');
 			var currentMarginTop = 0 - $li.outerHeight(true);
-			$ul.animate({marginTop : currentMarginTop +"px"}, 20, function(){
+			$ul.animate({marginTop : currentMarginTop +"px"}, 10, function(){
 				$li.appendTo($ul);
 				$ul.css('marginTop', '0px');
 				setTimeout(doScrolling, 10);
