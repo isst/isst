@@ -16,18 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import cn.edu.zju.isst.api.service.SpittleServiceImpl;
 import cn.edu.zju.isst.dao.ShowDao;
+import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.entity.LoggedUser;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Show;
-import cn.edu.zju.isst.pushlet.PushingSpittle;
+import cn.edu.zju.isst.entity.PushingSpittle;
 import cn.edu.zju.isst.pushlet.SpittleEventPullSource;
 
 @Controller
 public class PartyAdminController extends BaseController {
     @Autowired
     private ShowDao showDao;
+    @Autowired
+    private SpittleDao spittleDao;
  
     @RequestMapping(value="/admin.html", method=RequestMethod.GET)
     public String index(Model model, @ModelAttribute("user") LoggedUser user) {
@@ -56,11 +58,7 @@ public class PartyAdminController extends BaseController {
     
     @RequestMapping("/admin/getLotterySpittles.json")
     public @ResponseBody List<PushingSpittle> getLotterySpittles() {
-        SpittleServiceImpl ssi = SpittleServiceImpl.getInstance();
-        if (ssi != null) {
-            return ssi.retrievePushingSpittles();
-        }
-        return new ArrayList<PushingSpittle>();
+        return spittleDao.retrievePushingSpittles();
     }
     
     public @ResponseBody ResultHolder savePrize(@RequestParam("spittleId") int spittleId) {

@@ -1,7 +1,8 @@
 package cn.edu.zju.isst.api.service;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,10 +11,7 @@ import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Spittle;
-import cn.edu.zju.isst.entity.User;
 import cn.edu.zju.isst.entity.UserSpittle;
-import cn.edu.zju.isst.pushlet.PushingSpittle;
-import cn.edu.zju.isst.pushlet.SpittleEventPullSource;
 
 @Service
 public class SpittleServiceImpl implements SpittleService {
@@ -22,15 +20,9 @@ public class SpittleServiceImpl implements SpittleService {
     @Autowired
     private UserDao userDao;
     private static int defaultYear = 2013;
-    private static SpittleServiceImpl instance;
-    
-    public SpittleServiceImpl() {
-        instance = this;
-    }
-    
-    public static SpittleServiceImpl getInstance() {
-        return instance;
-    }
+    private static long maxPostInterval = 5000;
+
+    private static Map<Integer, Long> userLastPostTimes = new HashMap<Integer, Long>();
     
     @Override
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
@@ -47,26 +39,25 @@ public class SpittleServiceImpl implements SpittleService {
             return new ResultHolder("评论内容必须在5~200个字符之间");
         }
         
+        Long lastPostTime = userLastPostTimes.get(userId);
+        long currentTimeMillis = System.currentTimeMillis();
+        if (null != lastPostTime && currentTimeMillis - lastPostTime < maxPostInterval) {
+            return new ResultHolder("发布过于频繁");
+        }
+        
         Spittle spittle = new Spittle();
         spittle.setUserId(userId);
         spittle.setContent(content);
-        spittle.setPostTime(System.currentTimeMillis());
+        spittle.setPostTime(currentTimeMillis);
         spittle.setYear(defaultYear);
         spittle.setLikes(0);
         spittle.setDislikes(0);
         int id = spittleDao.create(spittle);
         if (id > 0) {
-            pushSpittle(spittle);
+            userLastPostTimes.put(userId, currentTimeMillis);
             return new ResultHolder(id);
         } else
             return new ResultHolder(0);
-    }
-
-    private void pushSpittle(Spittle spittle) {
-        User user = userDao.getUserById(spittle.getUserId());
-        if (user != null) {
-            SpittleEventPullSource.jumpQueue(new PushingSpittle(user, spittle));
-        }
     }
     
     @Override
@@ -92,25 +83,5 @@ public class SpittleServiceImpl implements SpittleService {
     @Override
     public Spittle get(int id) {
         return spittleDao.get(id);
-    }
-    
-    public List<PushingSpittle> retrievePushingSpittles(boolean orderByLikes) {
-        return retrievePushingSpittles(20, orderByLikes ? "likes" : "dislikes", true);
-    }
-    
-    public List<PushingSpittle> retrievePushingSpittles(int count, String order, boolean desc) {
-        List<PushingSpittle> pushingSpittles = new ArrayList<PushingSpittle>();
-        for (Spittle spittle : spittleDao.retrieve(count, order, desc)) {
-            User user = userDao.getUserById(spittle.getUserId());
-            if (user != null) {
-                pushingSpittles.add(new PushingSpittle(user, spittle));
-            }
-        }
-        
-        return pushingSpittles;
-    }
-    
-    public List<PushingSpittle> retrievePushingSpittles() {
-        return retrievePushingSpittles(0, "post_time", true);
     }
 }

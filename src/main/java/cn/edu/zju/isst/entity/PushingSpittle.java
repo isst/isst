@@ -1,4 +1,4 @@
-package cn.edu.zju.isst.pushlet;
+package cn.edu.zju.isst.entity;
 
 import cn.edu.zju.isst.entity.Spittle;
 import cn.edu.zju.isst.entity.User;
@@ -11,6 +11,10 @@ public class PushingSpittle {
     private String content;
     private long postTime;
 
+    public PushingSpittle() {
+        
+    }
+    
     public PushingSpittle(User user, Spittle spittle) {
         userId = user.getId();
         userName = user.getName();
@@ -66,9 +70,5 @@ public class PushingSpittle {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String toString() {
-        return nickname + ": " + content;
     }
 }

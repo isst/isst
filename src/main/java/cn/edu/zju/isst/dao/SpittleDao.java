@@ -2,18 +2,21 @@ package cn.edu.zju.isst.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.edu.zju.isst.entity.PushingSpittle;
 import cn.edu.zju.isst.entity.Spittle;
 import cn.edu.zju.isst.entity.User;
 import cn.edu.zju.isst.entity.UserSpittle;
@@ -25,6 +28,16 @@ public class SpittleDao {
     @Autowired
     private UserDao userDao;
     
+    private static SpittleDao instance;
+    
+    public SpittleDao() {
+        instance = this;
+    }
+    
+    public static SpittleDao getInstance() {
+        return instance;
+    }
+    
     public Spittle get(int id) {
         String sql = "SELECT * FROM yd_spittle WHERE id=?";
         List<Spittle> spittles = jdbcTemplate.query(sql, new Object[] { id }, ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
@@ -32,6 +45,46 @@ public class SpittleDao {
             return null;
         }
         return spittles.get(0);
+    }
+    
+    @Transactional
+    public PushingSpittle getPushingSpittle() {
+        String sql = "SELECT * FROM yd_spittle WHERE is_display='0' ORDER BY likes DESC, dislikes ASC, id ASC LIMIT 0, 1";
+        List<PushingSpittle> spittles = jdbcTemplate.query(sql, getPushingSpittleRowMapper());
+        
+        if (spittles.isEmpty()) {
+            return null;
+        }
+        
+        PushingSpittle pushingSpittle = spittles.get(0);
+        String updateSql = "UPDATE yd_spittle SET is_display=1 WHERE id=?";
+        jdbcTemplate.update(updateSql, new Object[] {pushingSpittle.getSpittleId()});
+        
+        return pushingSpittle;
+    }
+    
+    public List<PushingSpittle> retrievePushingSpittles() {
+        String sql = "SELECT * FROM yd_spittle";
+        return jdbcTemplate.query(sql, getPushingSpittleRowMapper());
+    }
+    
+    private RowMapper<PushingSpittle> getPushingSpittleRowMapper() {
+        return new RowMapper<PushingSpittle>() {
+            @Override
+            public PushingSpittle mapRow(ResultSet rs, int rowNum) throws SQLException {
+                PushingSpittle ps = new PushingSpittle();
+                ps.setSpittleId(rs.getInt("id"));
+                ps.setContent(rs.getString("content"));
+                ps.setPostTime(rs.getLong("post_time"));
+                ps.setUserId(rs.getInt("user_id"));
+                User user = userDao.getUserById(rs.getInt("user_id"));
+                if (user != null) {
+                    ps.setUserName(user.getName());
+                    ps.setNickname(user.getNickname());
+                }
+                return ps;
+            }
+        };
     }
     
     public int create(final Spittle spittle) {
@@ -125,7 +178,7 @@ public class SpittleDao {
         StringBuilder updateSql = new StringBuilder("UPDATE yd_spittle SET ");
         String updateField = isLike == 0 ? "dislikes" : "likes";
         updateSql.append(updateField).append("=").append(updateField).append("+1");
-        updateSql.append(" WHERE id=?");
+        updateSql.append(", is_display='0' WHERE id=?");
         jdbcTemplate.update(updateSql.toString(), new Object[] {spittleId});
         
         return true;

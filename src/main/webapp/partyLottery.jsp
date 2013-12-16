@@ -110,13 +110,13 @@ $(function() {
 		$('.prize-start').removeClass("prize-start");
 	});
 	
-	var currentMarginTop = 0;
 	function doScrolling() {
 		if (isScrolling) {
 			var $li = $ul.find('li:first');
-			currentMarginTop -= $li.outerHeight(true);
-			$ul.animate({marginTop : currentMarginTop +"px"}, 30, function(){
+			var currentMarginTop = 0 - $li.outerHeight(true);
+			$ul.animate({marginTop : currentMarginTop +"px"}, 20, function(){
 				$li.appendTo($ul);
+				$ul.css('marginTop', '0px');
 				setTimeout(doScrolling, 10);
 			});
 		} else {

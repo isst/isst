@@ -22,6 +22,8 @@ public class Spittle {
 
     private int dislikes;
 
+    private int is_display;
+    
     public int getId() {
         return id;
     }
@@ -80,5 +82,13 @@ public class Spittle {
 
     public void setDislikes(int dislikes) {
         this.dislikes = dislikes;
+    }
+
+    public int getIsDisplay() {
+        return is_display;
+    }
+
+    public void setIsDisplay(int isDisplay) {
+        this.is_display = isDisplay;
     }
 }
