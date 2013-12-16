@@ -107,7 +107,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
             			$plot.series[i].data[j][1] = data[j];    
         			}  
     			}
-    			console.log($plot.series[0].data);
 				$plot.replot();
 			}
 			isReploting = false;
@@ -125,7 +124,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	PL.joinListen("/party/votes");
 	
 	function onData(event) {
-		var votes = event.get("votes");console.log(votes);
+		var votes = event.get("votes");
 		if (votes) {
 			votes = $.parseJSON(votes);
 		    if (votes) {
