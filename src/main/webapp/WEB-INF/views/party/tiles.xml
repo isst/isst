@@ -18,6 +18,9 @@
     <put-attribute name="content" value="/WEB-INF/views/party/page/{1}.jsp"  />
   </definition>
    
+  <definition name="*.html" template="/WEB-INF/views/party/html/{1}.jsp">
+  </definition>
+   
   <definition name="*.dialog" template="/WEB-INF/views/party/layout/dialog.jsp">
     <put-attribute name="head" value="/WEB-INF/views/party/block/head.jsp" />
     <put-attribute name="script" value="/WEB-INF/views/party/block/logged.jsp"  />

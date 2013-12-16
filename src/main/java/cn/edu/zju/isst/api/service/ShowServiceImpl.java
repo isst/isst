@@ -10,6 +10,7 @@ import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Show;
 import cn.edu.zju.isst.entity.UserShowVote;
+import cn.edu.zju.isst.pushlet.ShowVoteEventPullSource;
 
 @Service
 public class ShowServiceImpl implements ShowService {
@@ -42,6 +43,7 @@ public class ShowServiceImpl implements ShowService {
         }
         
         if (showDao.vote(userId, showId)) {
+            ShowVoteEventPullSource.startVoting();
             return new ResultHolder();
         }
         

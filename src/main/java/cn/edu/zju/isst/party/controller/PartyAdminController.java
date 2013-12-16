@@ -3,6 +3,8 @@ package cn.edu.zju.isst.party.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -18,6 +20,7 @@ import cn.edu.zju.isst.api.service.SpittleServiceImpl;
 import cn.edu.zju.isst.dao.ShowDao;
 import cn.edu.zju.isst.entity.LoggedUser;
 import cn.edu.zju.isst.entity.ResultHolder;
+import cn.edu.zju.isst.entity.Show;
 import cn.edu.zju.isst.pushlet.PushingSpittle;
 import cn.edu.zju.isst.pushlet.SpittleEventPullSource;
 
@@ -33,6 +36,22 @@ public class PartyAdminController extends BaseController {
             return "admin.page";
         }
         return "redirect:index.html";
+    }
+    
+    @RequestMapping(value = "/votes.html")
+    public String votes(Model model) {
+        List<String> showNames = new ArrayList<String>();
+        List<Integer> showNameMapper = new ArrayList<Integer>();
+        for (Show show : showDao.retrieve()) {
+            showNames.add(show.getName());
+            showNameMapper.add(show.getId());
+        }
+        
+        model.addAttribute("showNames", new JSONArray(showNames));
+        model.addAttribute("showNameMapper", new JSONArray(showNameMapper));
+        model.addAttribute("voteData", new JSONObject(showDao.statisticalVote()));
+        
+        return "votes.html";
     }
     
     @RequestMapping("/admin/getLotterySpittles.json")

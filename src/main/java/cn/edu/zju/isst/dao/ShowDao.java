@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreator;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.simple.ParameterizedBeanPropertyRowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -23,9 +26,19 @@ import cn.edu.zju.isst.entity.UserShowVote;
 public class ShowDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
-   
+    
+    private static ShowDao instance;
+    
     private static final int defaultYear = 2013; 
 
+    public ShowDao() {
+        instance = this;
+    }
+    
+    public static ShowDao getInstance() {
+        return instance;
+    }
+    
     public Show get(int id) {
         String sql = "SELECT * FROM yd_show WHERE id=?";
         List<Show> shows = jdbcTemplate.query(sql, new Object[] { id }, ParameterizedBeanPropertyRowMapper.newInstance(Show.class));
@@ -36,14 +49,18 @@ public class ShowDao {
         return shows.get(0);
     }
     
+    public List<Show> retrieve() {
+        return retrieve(defaultYear);
+    }
+    
     public List<Show> retrieve(int year) {
         String sql = "SELECT * FROM yd_show WHERE year=? ORDER BY sort_num";
-        return jdbcTemplate.query(sql, new Object[] {defaultYear}, ParameterizedBeanPropertyRowMapper.newInstance(Show.class));
+        return jdbcTemplate.query(sql, new Object[] {year}, ParameterizedBeanPropertyRowMapper.newInstance(Show.class));
     }
     
     public List<UserShowVote> retrieveForUser(int year, int userId) {
         String sql = "SELECT s.*, sv.post_time vote_time FROM yd_show s LEFT JOIN yd_show_vote sv ON s.id=sv.show_id AND sv.user_id=? WHERE s.year=? ORDER BY s.sort_num";
-        return jdbcTemplate.query(sql, new Object[] {userId, defaultYear}, new RowMapper<UserShowVote>() {
+        return jdbcTemplate.query(sql, new Object[] {userId, year}, new RowMapper<UserShowVote>() {
             @Override
             public UserShowVote mapRow(ResultSet rs, int rowNum) throws SQLException {
                 UserShowVote show = new UserShowVote();
@@ -114,5 +131,19 @@ public class ShowDao {
             return true;
         }
         return false;
+    }
+    
+    public Map<Integer, Integer> statisticalVote() {
+        String sql = "SELECT show_id, COUNT(id) as votes FROM yd_show_vote GROUP BY show_id";
+        return jdbcTemplate.query(sql, new ResultSetExtractor<Map<Integer, Integer>>() {
+            @Override
+            public Map<Integer, Integer> extractData(ResultSet rs) throws SQLException {
+                Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+                while(rs.next()) {
+                    map.put(rs.getInt("show_id"), rs.getInt("votes"));
+                }
+                return map;
+            }
+        });
     }
 }
