@@ -71,7 +71,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	var pushVoteData = function(votes) {
 		var data = [];
 		for (var i = 0; i < showMapper.length; i++) {
-			data[i] = votes[showMapper[i]];
+			if (votes[showMapper[i]] == undefined) {
+				data[i] = 0;
+			} else {
+				data[i] = votes[showMapper[i]];
+			}
 		}
 		if (data.length>0) {
 			var hasDataChanged = false;
