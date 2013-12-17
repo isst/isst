@@ -15,21 +15,29 @@ import nl.justobjects.pushlet.core.EventPullSource;
 public class SpittleEventPullSource extends EventPullSource implements Serializable {
     private static final long serialVersionUID = 1L;
     
+    private static boolean isPushingActived = true;
+    
     private static SpittleEventPullSource instance;
     
     public SpittleEventPullSource() {
         super();
         instance = this;
     }
+
+    public static boolean isPushingActived() {
+        return isPushingActived;
+    }
     
     public static void pausePushing() {
         if (instance != null) {
             instance.passivate();
+            isPushingActived = false;
         }
     }
     
     public static void resumePushing() {
         if (instance != null) {
+            isPushingActived = true;
             instance.activate();
         }
     }

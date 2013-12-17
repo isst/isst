@@ -19,13 +19,15 @@ import cn.edu.zju.isst.entity.LoggedUser;
 public class PartyUserController extends BaseController {
     @Autowired
     private UserDao userDao;
-    
+
     @RequestMapping("/login.html")
-    public String login(@ModelAttribute("user") LoggedUser user, Model model) {
+    public String login(@ModelAttribute("user") LoggedUser user, Model model,
+            @RequestParam(value = "returnUrl", required = false, defaultValue = "") String returnUrl) {
         if (user.getId() > 0) {
             return "redirect:index.html";
         }
         model.addAttribute("title", "登录");
+        model.addAttribute("returnUrl", returnUrl);
         return "login.page";
     }
 
@@ -46,7 +48,7 @@ public class PartyUserController extends BaseController {
         if (user.getId() == 0) {
             return "redirect:login.html";
         }
-        
+
         model.addAttribute("title", "修改昵称");
         return "nickname.dialog";
     }

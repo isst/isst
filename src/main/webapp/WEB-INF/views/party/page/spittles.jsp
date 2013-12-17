@@ -13,9 +13,10 @@ $(function() {
 		var content = $spittleContent.val();
 		if (content) {
 			$.isst.api.postSpittle(content, function(response) {
-				console.log(response);
 				if (response.code > 0) {
 					$spittleContent.val("");
+				} else {
+					alert(response.message);
 				}
 			});
 		}

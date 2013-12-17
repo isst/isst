@@ -42,48 +42,85 @@ public class PartyAdminController extends BaseController {
     }
 
     @RequestMapping(value = "/votes.html")
-    public String votes(Model model) {
-        List<String> showNames = new ArrayList<String>();
-        List<Integer> showNameMapper = new ArrayList<Integer>();
-        for (Show show : showDao.retrieve()) {
-            showNames.add(show.getName());
-            showNameMapper.add(show.getId());
+    public String votes(@ModelAttribute("user") LoggedUser user, Model model) {
+        if (user.getId() == 0) {
+            return "redirect:login.html?returnUrl=votes.html";
+        } else if (user.getId() == 1) {
+            List<String> showNames = new ArrayList<String>();
+            List<Integer> showNameMapper = new ArrayList<Integer>();
+            for (Show show : showDao.retrieve()) {
+                showNames.add(show.getName());
+                showNameMapper.add(show.getId());
+            }
+
+            model.addAttribute("showNames", new JSONArray(showNames));
+            model.addAttribute("showNameMapper", new JSONArray(showNameMapper));
+            model.addAttribute("voteData", new JSONObject(showDao.statisticalVote()));
+
+            return "votes.html";
         }
-
-        model.addAttribute("showNames", new JSONArray(showNames));
-        model.addAttribute("showNameMapper", new JSONArray(showNameMapper));
-        model.addAttribute("voteData", new JSONObject(showDao.statisticalVote()));
-
-        return "votes.html";
+        return "redirect:index.html";
     }
     
     @RequestMapping(value = "/screen.html")
-    public String screen() {
-        return "screen.html";
+    public String screen(@ModelAttribute("user") LoggedUser user, Model model) {
+        if (user.getId() == 0) {
+            return "redirect:login.html?returnUrl=screen.html";
+        } else if (user.getId() == 1) {
+            model.addAttribute("isPushingActived", SpittleEventPullSource.isPushingActived());
+            return "screen.html";
+        }
+        return "redirect:index.html";
+    }
+    
+    @RequestMapping(value = "/lottery.html")
+    public String lottery(@ModelAttribute("user") LoggedUser user) {
+        if (user.getId() == 0) {
+            return "redirect:login.html?returnUrl=lottery.html";
+        } else if (user.getId() == 1) {
+            return "lottery.html";
+        }
+        return "redirect:index.html";
+    }
+    
+    @RequestMapping(value = "/announcement.html")
+    public String announcement() {
+        return "announcement.html";
     }
 
     @RequestMapping("/admin/getLotterySpittles.json")
     public @ResponseBody
-    List<PushingSpittle> getLotterySpittles() {
-        return spittleDao.retrievePushingSpittles();
+    List<PushingSpittle> getLotterySpittles(@ModelAttribute("user") LoggedUser user) {
+        if (user.getId() == 1) {
+            return spittleDao.retrievePushingSpittles();
+        }
+        return null;
     }
 
+    @RequestMapping(value = "/admin/winPrize", method = RequestMethod.POST)
     public @ResponseBody
-    ResultHolder savePrize(@RequestParam("spittleId") int spittleId) {
-
-        return null;
+    ResultHolder savePrize(@ModelAttribute("user") LoggedUser user, @RequestParam("spittleId") int spittleId, @RequestParam("prizeType") int prizeType) {
+        if (user.getId() == 1) {
+            return new ResultHolder(spittleDao.winPrize(spittleId, prizeType));
+        } else {
+            return new ResultHolder("无权限");
+        }
     }
 
     @RequestMapping(value = "/admin/pausePushing", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void pause() {
-        SpittleEventPullSource.pausePushing();
+    public void pause(@ModelAttribute("user") LoggedUser user) {
+        if (user.getId() == 1) {
+            SpittleEventPullSource.pausePushing();
+        }
     }
 
     @RequestMapping(value = "/admin/resumePushing", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void resume() {
-        SpittleEventPullSource.resumePushing();
+    public void resume(@ModelAttribute("user") LoggedUser user) {
+        if (user.getId() == 1) {
+            SpittleEventPullSource.resumePushing();
+        }
     }
 
     @RequestMapping(value = "/admin/pushMessage", method = RequestMethod.POST)

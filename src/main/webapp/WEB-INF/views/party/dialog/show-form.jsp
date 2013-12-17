@@ -37,9 +37,11 @@ $(function() {
 	$("#showForm").submit(function() {
 		var showName = $.trim($("#showName").val());
 		if (showName) {
-			$.post($(this).attr("action"), $(this).serialize(), function(response) {console.log(response);
+			$.post($(this).attr("action"), $(this).serialize(), function(response) {
 				if (response.code > 0) {
 					window.location.href = "<%=basePath%>party/admin.html";
+				} else {
+					alert(response.message);
 				}
 			});
 		}

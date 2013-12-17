@@ -1,5 +1,6 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
@@ -16,10 +17,12 @@
 		$("#loginSubmit").bind("click", function() {
 			var name = $('#username').val();
 			var password = $('#password').val();
+			var returnUrl = '<c:out value="${returnUrl}" />';
+			returnUrl = returnUrl ? $.isst.party.createUrl(returnUrl) : null;
 			$.isst.api.login(name, password, function(response) {
 				if (response.code > 0) {
 					$.post($.isst.party.url + '/login', {id: response.code}, function() {
-						window.location.href = $.isst.party.createUrl("spittles.html");
+						window.location.href = returnUrl ? returnUrl : $.isst.party.createUrl("index.html");
 					});
 				}
 			});

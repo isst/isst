@@ -15,7 +15,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <meta http-equiv="expires" content="0">    
 <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 <meta http-equiv="description" content="This is my page">
+<link type="text/css" rel="stylesheet" href="resources/jquery.jqplot/jquery.jqplot.css" />
+<link href="resources/css/party-screen.css"  type="text/css" rel="stylesheet"/>
+</head>
+<body>
+
+<div class="top">
+	<div class="logo"></div>
+</div>
+
+<div class="screen">
+	<div id="votes"></div>
 	
+	<div class="controls hide" id="controls">
+		<a href="<%=basePath%>party/screen.html">评论</a>
+		<a href="<%=basePath%>party/lottery.html">抽奖</a>
+		<div class="bg"></div>
+	</div>
+</div>
 <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="resources/jquery.jqplot/excanvas.js"></script><![endif]-->
 <script type="text/javascript" src="resources/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="resources/jquery.jqplot/jquery.jqplot.min.js"></script>
@@ -27,12 +44,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript" src="resources/jquery.jqplot/jqplot.pointLabels.min.js"></script>
 <script type="text/javascript" src="resources/jquery.jqplot/jqplot.canvasAxisTickRenderer.min.js"></script>
 <script type="text/javascript" src="resources/js/ajax-pushlet-client.js"></script>
-<link type="text/css" rel="stylesheet" href="resources/jquery.jqplot/jquery.jqplot.css" />
-</head>
-<body style="margin:0; padding:0;">
-
-<div id="votes" style="height:600px;width:90%; margin:20px auto 0 auto;"></div>
-
+<script type="text/javascript" src="resources/js/party-screen.js"></script>
 <script type="text/javascript">
 	var showMapper = <c:out value="${showNameMapper}" escapeXml="false" />;
 	var jqplotOptions = {
@@ -60,7 +72,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				tickRenderer: $.jqplot.CanvasAxisTickRenderer,
 				ticks: <c:out value="${showNames}" escapeXml="false" />,
 				tickOptions: {
-					angle: -30
+					angle: -30,
+					textColor: '#ffffff',
+					fontSize: '18px',
+					fontWeight: 'bold'
 				}
 			}
 		}

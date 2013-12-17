@@ -121,6 +121,31 @@ public class SpittleDao {
         spittle.setId(id);
         return id;
     }
+    
+    public int winPrize(int spittleId, final int prizeType) {
+        final Spittle spittle = get(spittleId);
+        if (null == spittle) {
+            return 0;
+        }
+        
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(new PreparedStatementCreator() {
+           public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+               String sql = "INSERT INTO yd_spittle_lottery (year,user_id,spittle_id,post_time,prize_type) VALUES (?,?,?,?,?)";
+               PreparedStatement ps = conn.prepareStatement(sql, new String[] {"id"});
+               ps.setInt(1, spittle.getYear());
+               ps.setInt(2, spittle.getUserId());
+               ps.setInt(3, spittle.getId());
+               ps.setLong(4, System.currentTimeMillis()/1000);
+               ps.setInt(5, prizeType);
+               return ps;
+           }
+        }, keyHolder);
+        
+        int id = keyHolder.getKey().intValue();
+        spittle.setId(id);
+        return id;
+    }
 
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
         StringBuilder sql = new StringBuilder("SELECT s.*, su.is_like FROM yd_spittle s LEFT JOIN yd_spittle_user su ON s.id=su.spittle_id AND su.user_id=?");

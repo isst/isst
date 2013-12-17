@@ -1,4 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
@@ -25,52 +26,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		</div>
     </div>
     
-	<div class="control-area" id="controlArea">
-		<a href="<%=basePath%>partyLottery.jsp" class="lottery" id="lottery" >抽奖</a>
-		<a href="javascript:void(0);" class="start" id="pause" >暂停</a>
+	<div class="controls hide" id="controls">
+		<a href="<%=basePath%>party/lottery.html">抽奖</a>
+		<a href="<%=basePath%>party/votes.html">投票</a>
+		<a href="javascript:void(0);" id="pause"><c:out value="${isPushingActived?'暂停':'播放'}" /></a>
+		<div class="bg"></div>
 	</div>
 </div>
 
 <script type="text/javascript" src="resources/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="resources/js/ajax-pushlet-client.js"></script>
+<script type="text/javascript" src="resources/js/party-screen.js"></script>
 <script type="text/javascript">
-
-Date.prototype.format = function(fmt)   {
-  var o = {   
-    "M+" : this.getMonth()+1, 
-    "d+" : this.getDate(),
-    "h+" : this.getHours(),
-    "m+" : this.getMinutes(),
-    "s+" : this.getSeconds(),
-    "q+" : Math.floor((this.getMonth()+3)/3),
-    "S"  : this.getMilliseconds()
-  };   
-  if(/(y+)/.test(fmt))   
-    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
-  for(var k in o)   
-    if(new RegExp("("+ k +")").test(fmt))   
-  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
-  return fmt;   
-};
-
 var spittles = [];
 var $ul = $("#spittleList");
 var doing = false;
 var timer = null;
-
-function newTemplate(spittle) {
-	var dateString = (new Date(spittle.postTime * 1000)).format("yyyy-MM-dd hh:mm:ss");
-	var template = '<li id="'+spittle.spittleId+'">' +
-		'<div class="spittle">' +
-			'<div class="hd">' +
-				'<h3>'+spittle.nickname+'</h3>' +
-				'<p>'+dateString+'</p>' +
-			'</div>' +
-			'<div class="cnt ">'+spittle.content+'</div>' +
-		'</div>' +
-	'</li>';
-    return $(template);
-}
 
 function deQuene() {
 	if (!doing && spittles.length>0) {
@@ -113,19 +84,6 @@ function onData(event) {
 }
     
 $(function() {
-	$("#control_area").hover(
-		function() {
-			var $this = $(this);
-			if ($this.hasClass("undis")) {
-				$(this).removeClass("undis");
-				$(this).addClass("dis");
-			} else {
-				$(this).removeClass("dis");
-				$(this).addClass("undis");
-			}
-		}
-	);
-	
 	$("#pause").click(function() {
 		var $this = $(this);
 		if ($this.text() == "暂停") {

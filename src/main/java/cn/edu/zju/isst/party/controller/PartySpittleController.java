@@ -16,7 +16,7 @@ public class PartySpittleController extends BaseController {
             return "redirect:login.html";
         }
         
-        model.addAttribute("title", "评论列表");
+        model.addAttribute("title", "我要吐槽");
         
         return "spittles.page";
     }

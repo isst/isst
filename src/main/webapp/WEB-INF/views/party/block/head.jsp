@@ -14,6 +14,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script src="<%=basePath%>resources/js/jquery-2.0.3.min.js"></script>
 	<script src="<%=basePath%>resources/jquery.mobile/jquery.mobile-1.3.2.min.js"></script>
 	<script type="text/javascript">
+		$(document).bind("mobileinit", function () {
+    		$.mobile.ajaxEnabled = false;
+		});
+		
 		$.isst = {
 			url: '<%=basePath%>',
 			userId: <c:out value="${user.id}" />
