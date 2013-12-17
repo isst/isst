@@ -1,0 +1,14 @@
+html, body { padding:0; margin:0; height:100%; width:100%; }
+body { background: url('../images/screen/screen.jpg') no-repeat center center; font-family:MicroSoft YaHei,simHei; font-size: 18px;}
+body a { color: #f6c065;}
+.top { height: 175px; background: url('../images/screen/slogan.png') no-repeat center center;}
+.top .logo { width: 213px; height: 174px; background: url('../images/screen/logo.png') no-repeat center center;}
+.spittle-bg { background: url('../images/screen/spittle-bg.png') no-repeat center center; width: 900px; height: 573px; overflow: hidden; margin: 0 auto; padding: 10px;}
+.spittle-wrapper { width: 884px; height:553px; margin: 10px auto; overflow: hidden;}
+.spittle-list, .spittle-list li { list-style:none; margin:0; padding: 0; }
+.spittle-list li { border: 1px solid #fff45f; margin-bottom: 7px; padding: 15px; background-color: #bf2a20;}
+.spittle { color: #fff;}
+.spittle .hd { overflow: auto;}
+.spittle .hd h3 { font-size: 36px; padding: 0; margin: 5px 0 10px 0; font-weight: bold; color: #fff455; float: left;}
+.spittle .hd p { float: right;}
+.spittle .cnt { font-size: 30px; font-weight: bold; word-break: break-all; word-wrap: break-word; line-height: 1.5em; clear: both; margin: 0 10px;} margin: 0 10px;}

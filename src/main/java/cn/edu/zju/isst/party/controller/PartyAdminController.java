@@ -56,6 +56,11 @@ public class PartyAdminController extends BaseController {
 
         return "votes.html";
     }
+    
+    @RequestMapping(value = "/screen.html")
+    public String screen() {
+        return "screen.html";
+    }
 
     @RequestMapping("/admin/getLotterySpittles.json")
     public @ResponseBody
