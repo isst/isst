@@ -43,15 +43,15 @@ public class SpittleController {
         return spittleService.post(userId, content);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{spittleId}", method = RequestMethod.DELETE)
     public @ResponseBody
-    ResultHolder delete(@PathVariable("userId") int userId, @PathVariable("id") int spittleId) {
+    ResultHolder delete(@PathVariable("userId") int userId, @PathVariable("spittleId") int spittleId) {
         return spittleService.delete(userId, spittleId);
     }
 
-    @RequestMapping(value = "/{id}/likes", method = RequestMethod.POST)
+    @RequestMapping(value = "/{spittleId}/likes", method = RequestMethod.POST)
     public @ResponseBody
-    ResultHolder like(@PathVariable("userId") int userId, @PathVariable("id") int spittleId,
+    ResultHolder like(@PathVariable("userId") int userId, @PathVariable("spittleId") int spittleId,
             @RequestParam("isLike") int isLike) {
         return spittleService.like(userId, spittleId, isLike);
     }

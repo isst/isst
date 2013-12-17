@@ -24,16 +24,15 @@ public class UserController {
 		return userService.validate(name, password);
 	}
 	
-	@RequestMapping(value="/{id}", method = RequestMethod.GET)
+	@RequestMapping(value="/{userId}", method = RequestMethod.GET)
     public @ResponseBody
-    User get(@PathVariable("id") int userId) {
+    User get(@PathVariable("userId") int userId) {
 		return userService.get(userId);
 	}
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
     public @ResponseBody
-    ResultHolder updateNickname(@PathVariable("id") int userId, @RequestParam("nickname") String nickname) {
+    ResultHolder updateNickname(@PathVariable("userId") int userId, @RequestParam("nickname") String nickname) {
 		return userService.updateNickname(userId, nickname);
 	}
-      
 }

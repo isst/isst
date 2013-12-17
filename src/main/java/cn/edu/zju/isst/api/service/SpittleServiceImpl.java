@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import cn.edu.zju.isst.config.PartyConfig;
 import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.ResultHolder;
@@ -19,8 +20,6 @@ public class SpittleServiceImpl implements SpittleService {
     private SpittleDao spittleDao;
     @Autowired
     private UserDao userDao;
-    private static int defaultYear = 2013;
-    private static long maxPostInterval = 5000;
 
     private static Map<Integer, Long> userLastPostTimes = new HashMap<Integer, Long>();
     
@@ -41,7 +40,7 @@ public class SpittleServiceImpl implements SpittleService {
         
         Long lastPostTime = userLastPostTimes.get(userId);
         long currentTimeMillis = System.currentTimeMillis();
-        if (null != lastPostTime && currentTimeMillis - lastPostTime < maxPostInterval) {
+        if (null != lastPostTime && currentTimeMillis - lastPostTime < PartyConfig.SPITTLE_POST_INTERVAL) {
             return new ResultHolder("发布过于频繁");
         }
         
@@ -49,7 +48,6 @@ public class SpittleServiceImpl implements SpittleService {
         spittle.setUserId(userId);
         spittle.setContent(content);
         spittle.setPostTime(currentTimeMillis);
-        spittle.setYear(defaultYear);
         spittle.setLikes(0);
         spittle.setDislikes(0);
         int id = spittleDao.create(spittle);

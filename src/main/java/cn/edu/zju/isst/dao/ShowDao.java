@@ -19,6 +19,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.edu.zju.isst.config.PartyConfig;
 import cn.edu.zju.isst.entity.Show;
 import cn.edu.zju.isst.entity.UserShowVote;
 
@@ -28,8 +29,6 @@ public class ShowDao {
     private JdbcTemplate jdbcTemplate;
     
     private static ShowDao instance;
-    
-    private static final int defaultYear = 2013; 
 
     public ShowDao() {
         instance = this;
@@ -50,12 +49,16 @@ public class ShowDao {
     }
     
     public List<Show> retrieve() {
-        return retrieve(defaultYear);
+        return retrieve(PartyConfig.YEAR);
     }
     
     public List<Show> retrieve(int year) {
         String sql = "SELECT * FROM yd_show WHERE year=? ORDER BY sort_num";
         return jdbcTemplate.query(sql, new Object[] {year}, ParameterizedBeanPropertyRowMapper.newInstance(Show.class));
+    }
+    
+    public List<UserShowVote> retrieveForUser(int userId) {
+        return retrieveForUser(PartyConfig.YEAR, userId);
     }
     
     public List<UserShowVote> retrieveForUser(int year, int userId) {
@@ -113,15 +116,15 @@ public class ShowDao {
     }
     
     @Transactional
-    public boolean vote(int userId, int showId) {
+    public int vote(int userId, int showId) {
         if (hasVote(userId, showId)) {
-            return false;
+            return 1;
         }
         
         String sql = "INSERT INTO yd_show_vote (user_id, show_id, post_time) VALUES (?, ?, ?)";
         jdbcTemplate.update(sql, new Object[] {userId, showId, System.currentTimeMillis()/1000});
         
-        return true;
+        return 0;
     }
     
     public boolean hasVote(int userId, int showId) {

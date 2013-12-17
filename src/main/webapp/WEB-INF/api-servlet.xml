@@ -23,4 +23,9 @@
     </property>
     <property name="defaultContentType" value="application/json" />
   </bean>
+  
+  <mvc:interceptors>
+    <bean class="cn.edu.zju.isst.api.interceptor.AuthenticationInterceptor"/>
+  </mvc:interceptors>
+  
 </beans>

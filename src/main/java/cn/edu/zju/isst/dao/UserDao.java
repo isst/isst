@@ -1,7 +1,5 @@
 package cn.edu.zju.isst.dao;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -12,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.DigestUtils;
 
 import cn.edu.zju.isst.entity.User;
+import cn.edu.zju.isst.util.StringUtils;
 
 @Repository
 public class UserDao {
@@ -38,14 +36,7 @@ public class UserDao {
     }
 
     public String encryptPassword(String password) {
-        try {
-            MessageDigest mdInst;
-            mdInst = MessageDigest.getInstance("MD5");
-            mdInst.update((passwordSalt + password).getBytes());
-            return DigestUtils.md5DigestAsHex(mdInst.digest());
-        } catch (NoSuchAlgorithmException e) {
-        }
-        return password;
+        return StringUtils.md5(passwordSalt + password);
     }
 
     public User getUserById(int userId) {

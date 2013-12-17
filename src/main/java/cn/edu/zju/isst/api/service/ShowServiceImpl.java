@@ -18,12 +18,10 @@ public class ShowServiceImpl implements ShowService {
     private ShowDao showDao;
     @Autowired
     private UserDao userDao;
-    
-    private static int defaultYear = 2013;
 
     @Override
     public List<Show> retrieve() {
-        return showDao.retrieve(defaultYear);
+        return showDao.retrieve();
     }
 
     @Override
@@ -42,12 +40,15 @@ public class ShowServiceImpl implements ShowService {
             return new ResultHolder("节目未开始");
         }
         
-        if (showDao.vote(userId, showId)) {
+        int result = showDao.vote(userId, showId);
+        if (result == 0) {
             ShowVoteEventPullSource.startVoting();
             return new ResultHolder();
+        } else if (result == 1) {
+            return new ResultHolder("已投过票");
         }
         
-        return new ResultHolder("已投过票");
+        return null;
     }
 
     @Override
@@ -57,7 +58,6 @@ public class ShowServiceImpl implements ShowService {
 
     @Override
     public int save(Show show) {
-        show.setYear(defaultYear);
         if (show.getId() > 0) {
             return showDao.update(show);
         } else {
@@ -72,6 +72,6 @@ public class ShowServiceImpl implements ShowService {
 
     @Override
     public List<UserShowVote> retrieveForUser(int userId) {
-        return showDao.retrieveForUser(defaultYear, userId);
+        return showDao.retrieveForUser(userId);
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.edu.zju.isst.config.PartyConfig;
 import cn.edu.zju.isst.entity.PushingSpittle;
 import cn.edu.zju.isst.entity.Spittle;
 import cn.edu.zju.isst.entity.User;
@@ -102,6 +103,7 @@ public class SpittleDao {
     }
     
     public int create(final Spittle spittle) {
+        spittle.setYear(PartyConfig.YEAR);
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
            public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
