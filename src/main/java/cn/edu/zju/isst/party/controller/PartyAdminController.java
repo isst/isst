@@ -49,7 +49,8 @@ public class PartyAdminController extends BaseController {
             List<String> showNames = new ArrayList<String>();
             List<Integer> showNameMapper = new ArrayList<Integer>();
             for (Show show : showDao.retrieve()) {
-                showNames.add(show.getName());
+                String showName = show.getName();
+                showNames.add(showName.length() > 10 ? showName.substring(0, 10) : showName);
                 showNameMapper.add(show.getId());
             }
 
