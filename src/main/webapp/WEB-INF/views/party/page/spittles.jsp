@@ -3,12 +3,15 @@
 
 <c:set var="activeNav" value="spittles" scope="request" />
 
+<form action="" method="post" id="spittleForm">
 <input type="text" id="spittleContent" placeholder="请输入内容..." />
-<input type="button" id="spittleSubmit" value="发布"  data-inline="true" data-theme="b" />
+<input type="submit" value="发布"  data-inline="true" data-theme="b" />
+</form>
+
 
 <script type="text/javascript">
 $(function() {
-	$("#spittleSubmit").click(function() {
+	$("#spittleForm").submit(function() {
 		var $spittleContent = $("#spittleContent");
 		var content = $spittleContent.val();
 		if (content) {
@@ -20,6 +23,7 @@ $(function() {
 				}
 			});
 		}
+		return false;
 	});
 });
 </script>

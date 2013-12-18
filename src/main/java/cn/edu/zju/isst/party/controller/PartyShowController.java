@@ -33,8 +33,8 @@ public class PartyShowController extends BaseController {
     @RequestMapping("/showForm.html")
     public String form(@RequestParam(value = "showId", required = false, defaultValue = "0") int showId, Model model,
             @ModelAttribute("user") LoggedUser user) {
-        if (user.getId() == 0) {
-            return "redirect:login.html";
+        if (user.getId() != 1) {
+            return "redirect:index.html";
         }
 
         Show show = null;
@@ -73,6 +73,10 @@ public class PartyShowController extends BaseController {
     @RequestMapping(value = "/showForm", method = RequestMethod.POST)
     public @ResponseBody
     ResultHolder post(Show show, @ModelAttribute("user") LoggedUser user) {
+        if (user.getId() != 1) {
+            return new ResultHolder("无权限");
+        }
+        
         if (show.getName() == null || show.getName().equals("")) {
             return new ResultHolder("节目名称不能为空");
         }

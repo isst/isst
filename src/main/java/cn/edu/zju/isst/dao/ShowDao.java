@@ -136,6 +136,11 @@ public class ShowDao {
         return false;
     }
     
+    public int getUserVotes(int userId) {
+        String countSQL = "SELECT COUNT(id) FROM yd_show_vote WHERE user_id=?";
+        return jdbcTemplate.queryForObject(countSQL, new Object[] {userId}, Integer.class);
+    }
+    
     public Map<Integer, Integer> statisticalVote() {
         String sql = "SELECT show_id, COUNT(id) as votes FROM yd_show_vote GROUP BY show_id";
         return jdbcTemplate.query(sql, new ResultSetExtractor<Map<Integer, Integer>>() {

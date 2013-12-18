@@ -13,8 +13,12 @@ $(function() {
 	$("#showVote").click(function() {
 		var showId = <c:out value="${show.id}" />
 		if (showId) {
-			$.isst.api.showVote(showId, function() {
-				window.location.href = "<%=basePath%>party/shows.html";
+			$.isst.api.showVote(showId, function(response) {
+				if (response.code > 0) {
+					window.location.href = "<%=basePath%>party/shows.html";
+				} else {
+					alert(response.message);
+				}
 			});
 		}
 	});

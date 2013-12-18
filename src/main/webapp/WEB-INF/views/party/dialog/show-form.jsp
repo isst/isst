@@ -20,11 +20,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<input type="text" name="sortNum" value="${show.sortNum}" placeholder="节目序号" />
 
 		<fieldset data-role="controlgroup" data-type="horizontal">
-		    <input name="status" id="status-pending" value="0" ${show.status==0?'checked="checked"':''} type="radio">
+		    <input name="status" id="status-pending" value="0" ${show.status==0?'checked="checked"':''} type="radio" />
 		    <label for="status-pending">未开始</label>
-		    <input name="status" id="status-running" value="1" ${show.status==1?'checked="checked"':''} type="radio">
+		    <input name="status" id="status-running" value="1" ${show.status==1?'checked="checked"':''} type="radio" />
 		    <label for="status-running">进行中</label>
-		    <input name="status" id="status-end" value="2" ${show.status==2?'checked="checked"':''} type="radio">
+		    <input name="status" id="status-end" value="2" ${show.status==2?'checked="checked"':''} type="radio" />
 		    <label for="status-end">已结束</label>
 		</fieldset>
 		

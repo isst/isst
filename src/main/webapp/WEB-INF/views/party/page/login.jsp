@@ -7,14 +7,13 @@
 	<tiles:insertAttribute name="head" />
 	<style type="text/css">
 		p {font-size: 1.5em;font-weight: bold;}
-		#loginSubmit{float:right; margin:10px; }
 	</style>
 </head>
 <body>
 <div id="page" data-role="page">
 	<script type="text/javascript">
 	jQuery(document).ready(function() {
-		$("#loginSubmit").bind("click", function() {
+		$("#loginform").submit(function() {
 			var name = $('#username').val();
 			var password = $('#password').val();
 			var returnUrl = '<c:out value="${returnUrl}" />';
@@ -40,7 +39,7 @@
 		    	<input type="text" name="username" id="username" placeholder="用户名" value="" class="required" /><br>
 		    	<label for="password" class="ui-hidden-accessible">密码</label>
 		    	<input type="password" name="password" id="password" placeholder="密码" value="" class="required" />
-			    <a data-role="button" id="loginSubmit" data-theme="b">登录</a>
+			    <input type="submit" data-role="button" data-theme="b" id="loginSubmit" value="登录" />
 		    </form>
 	  </div>
   	<div data-role="footer" data-position="fixed" data-theme="a">

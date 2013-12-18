@@ -34,6 +34,24 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
 </div>
 
+<div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-collapsed="true" data-content-theme="c">
+	<h3>老师名单</h3>
+	<ul data-role="listview" data-count-theme="c" data-inset="true" id="show-list">
+		<c:forEach var="teacher" items="${teachers}">
+		<li>
+			<a data-rel="dialog" href="<%=basePath%>party/userForm.html?userId=${teacher.id}">
+				<h2>${teacher.name}</h2>
+				<p>${teacher.fullname}&nbsp;&nbsp;|&nbsp;&nbsp;${teacher.nickname}</p>
+			</a>
+		</li>
+		</c:forEach>
+	</ul>
+<c:if test="${user.id==1}">
+<a href="<%=basePath%>party/userForm.html" data-rel="dialog" data-role="button" data-theme="b">添加老师</a>
+<a href="<%=basePath%>party/importUserForm.html" data-rel="dialog" data-role="button">导入学生</a>
+</c:if>
+</div>
+
 <script type="text/javascript">
 $(function() {
 	var $pushMessageTitle = $("#pushMessageTitle");

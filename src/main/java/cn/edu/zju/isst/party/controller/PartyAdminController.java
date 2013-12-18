@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import cn.edu.zju.isst.bccs.BccsApi;
 import cn.edu.zju.isst.dao.ShowDao;
 import cn.edu.zju.isst.dao.SpittleDao;
+import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.LoggedUser;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Show;
@@ -31,11 +32,14 @@ public class PartyAdminController extends BaseController {
     private ShowDao showDao;
     @Autowired
     private SpittleDao spittleDao;
+    @Autowired
+    private UserDao userDao;
 
     @RequestMapping(value = "/admin.html", method = RequestMethod.GET)
     public String index(Model model, @ModelAttribute("user") LoggedUser user) {
         if (user.getId() == 1) {
-            model.addAttribute("shows", showDao.retrieve(2013));
+            model.addAttribute("shows", showDao.retrieve());
+            model.addAttribute("teachers", userDao.retrieve(1));
             return "admin.page";
         }
         return "redirect:index.html";

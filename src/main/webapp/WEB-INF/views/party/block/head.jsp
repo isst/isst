@@ -74,7 +74,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$.isst.api.get('/users/{userId}/shows', {userId: $.isst.userId}, callback);
 			},
 			showVote: function(showId, callback) {
-				$.isst.api.post('/users/{userId}/shows/'+ showId +'/votes', {userId: $.isst.userId}, callback);
+				$.isst.api.post('/users/{userId}/shows/{showId}/votes', {userId: $.isst.userId, showId: showId}, callback);
 			}
 		};
 	</script>

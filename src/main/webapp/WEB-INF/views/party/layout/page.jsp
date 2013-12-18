@@ -9,16 +9,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html lang="zh-cn">
 <head>
 	<tiles:insertAttribute name="head" />
-	<script type="text/javascript">
-	$(function() {
-		$('#logout').click(function() {
-			$.get($(this).attr('href'), function() {
-				window.location.href = $.isst.party.createUrl("login.html");
-			});
-			return false;
-		});
-	});
-	</script>
 </head>
 <body>
 <div id="page" data-role="page">
@@ -26,7 +16,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div data-role="header" data-theme="d" data-position="fixed">
 		<a class="ui-btn-left" href="<%=basePath%>party/nickname.html" data-role="button" data-rel="dialog" data-icon="edit" id="nickname">${user.nickname}</a>
 		<h1>编译青春，驱动未来</h1>
-		<a class="ui-btn-right" href="<%=basePath%>party/logout" data-role="button" data-icon="arrow-r" data-iconpos="right" id="logout">退出</a>
+		<a class="ui-btn-right" href="<%=basePath%>party/logout" data-role="button" data-icon="arrow-r" data-iconpos="right" id="logout" data-ajax="false">退出</a>
 	</div>
 	<div data-role="content" class="content">
 	    <tiles:insertAttribute name="content" />
