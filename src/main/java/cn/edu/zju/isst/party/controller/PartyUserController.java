@@ -79,10 +79,11 @@ public class PartyUserController extends BaseController {
     public @ResponseBody
     ResultHolder post(@RequestParam(value = "id", required = false, defaultValue = "0") int id,
             @RequestParam("name") String name, @RequestParam("password") String password,
-            @RequestParam("fullname") String fullname, @RequestParam("nickname") String nickname, @ModelAttribute("user") LoggedUser user) {
-         if (user.getId() != 1) {
-             return new ResultHolder("无权限");
-         }
+            @RequestParam("fullname") String fullname, @RequestParam("nickname") String nickname,
+            @ModelAttribute("user") LoggedUser user) {
+        if (user.getId() != 1) {
+            return new ResultHolder("无权限");
+        }
 
         if (name == null || name.equals("")) {
             return new ResultHolder("用户不能为空");
@@ -113,14 +114,15 @@ public class PartyUserController extends BaseController {
             return "redirect:index.html";
         }
 
-        model.addAttribute("title","导入用户");
+        model.addAttribute("title", "导入用户");
 
         return "import-user.dialog";
     }
-    
+
     @RequestMapping(value = "/importUserForm", method = RequestMethod.POST)
     public String importUser(@RequestParam("xlsFile") MultipartFile file, Model model) throws Exception {
-        if (file.getContentType().equals("application/vnd.ms-excel")) {
+        if (file.getContentType().equals("application/vnd.ms-excel")
+                || file.getContentType().equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")) {
             Workbook wb = WorkbookFactory.create(file.getInputStream());
             Sheet sheet = wb.getSheetAt(0);
             int i = -1, count = 0;
@@ -133,43 +135,44 @@ public class PartyUserController extends BaseController {
                 String id = getStringCellValue(row.getCell(0));
                 String name = getStringCellValue(row.getCell(2));
                 String idNo = getStringCellValue(row.getCell(4));
-                
+
                 if (idNo == null) {
                     continue;
                 }
-                
+
                 idNo = idNo.trim();
                 if (idNo.length() < 6) {
-                    idNo = "123456";
+                    // idNo = "123456";
+                    continue;
                 }
-                
+
                 if (userDao.userNameExisting(id)) {
                     continue;
                 }
-                
+
                 User user = new User();
                 user.setName(id);
                 user.setFullname(name);
                 user.setNickname(name);
                 user.setPassword(userDao.encryptPassword(idNo.substring(idNo.length() - 6)));
                 user.setType(0);
-                
+
                 userDao.create(user);
-                
+
                 count++;
             }
-            
+
             model.addAttribute("total", i);
             model.addAttribute("count", count);
         } else {
-            model.addAttribute("error", "文件格式错误");
+            model.addAttribute("error", "文件格式错误: " + file.getContentType());
         }
-        
+
         model.addAttribute("title", "导入结果");
-        
+
         return "import-user-result.page";
     }
-    
+
     private String getStringCellValue(Cell cell) {
         if (cell != null) {
             cell.setCellType(Cell.CELL_TYPE_STRING);
