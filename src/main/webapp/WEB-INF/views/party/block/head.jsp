@@ -52,8 +52,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$.isst.api._ajax(path, data, callback, 'post');
 			},
 			_ajax: function(path, data, callback, type) {
+				data._path = path;
 				$.ajax({
-					url: $.isst.api.url + path,
+					url: $.isst.party.createUrl("api"),
 					data: data || {},
 					type: type,
 					dataType: 'json',
@@ -64,16 +65,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$.isst.api.post('/users/validation', {name: name, password: password}, callback);
 			},
 			postSpittle: function(content, callback) {
-				$.isst.api.post('/users/'+ $.isst.userId +'/spittles', {content: content}, callback);
+				$.isst.api.post('/users/{userId}/spittles', {content: content, userId: $.isst.userId}, callback);
 			},
 			updateNickname: function(nickname, callback) {
-				$.isst.api.put('/users/'+ $.isst.userId, {nickname: nickname}, callback);
+				$.isst.api.put('/users/{userId}', {nickname: nickname, userId: $.isst.userId}, callback);
 			},
 			getShows: function(callback) {
-				$.isst.api.get('/users/'+$.isst.userId+'/shows', {}, callback);
+				$.isst.api.get('/users/{userId}/shows', {userId: $.isst.userId}, callback);
 			},
 			showVote: function(showId, callback) {
-				$.isst.api.post('/users/'+ $.isst.userId +'/shows/'+ showId +'/votes', {}, callback);
+				$.isst.api.post('/users/{userId}/shows/'+ showId +'/votes', {userId: $.isst.userId}, callback);
 			}
 		};
 	</script>

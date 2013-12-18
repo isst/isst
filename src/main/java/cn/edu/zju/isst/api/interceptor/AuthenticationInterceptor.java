@@ -24,10 +24,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     @SuppressWarnings("unchecked")
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (!request.getMethod().equals("PUT")) {
-            return true;
-        }
-        
         Map<String, String> data = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE); 
         Map<String, String[]> rawData = (Map<String, String[]>)request.getParameterMap();
 
@@ -54,14 +50,15 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
                 return o1.getKey().compareTo(o2.getKey());
             }
         });
-
+        
         StringBuilder sb = new StringBuilder(ApiConfig.APP_SECRET_KEY);
         sb.append(expire);
         for (Map.Entry<String, String> entry : list) {
             sb.append(entry.getValue());
         }
         
-        String expectedToken = StringUtils.md5(sb.toString());System.out.println(expectedToken);System.out.println(System.currentTimeMillis()/1000);
+        String expectedToken = StringUtils.md5(sb.toString());
+
         if (expectedToken.equals(token)) {
             if (expire == null || System.currentTimeMillis()/1000 - Long.valueOf(expire).longValue() > 600) {
                 responseError(response, "认证失效");
@@ -76,8 +73,9 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
     }
     
     private void responseError(HttpServletResponse response, String message) throws IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         PrintWriter pw = response.getWriter();
-        response.setContentType("application/json;charset=utf-8");
         pw.append(new JSONObject(new ResultHolder(message)).toString());
     }
 }

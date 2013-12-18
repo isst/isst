@@ -21,9 +21,9 @@
 			returnUrl = returnUrl ? $.isst.party.createUrl(returnUrl) : null;
 			$.isst.api.login(name, password, function(response) {
 				if (response.code > 0) {
-					$.post($.isst.party.url + '/login', {id: response.code}, function() {
-						window.location.href = returnUrl ? returnUrl : $.isst.party.createUrl("index.html");
-					});
+					window.location.href = returnUrl ? returnUrl : $.isst.party.createUrl("index.html");
+				} else {
+					alert(response.message);
 				}
 			});
 			return false;

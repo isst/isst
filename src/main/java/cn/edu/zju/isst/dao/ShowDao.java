@@ -92,7 +92,7 @@ public class ShowDao {
            public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
                String sql = "INSERT INTO yd_show (year,name,organization,category,status,sort_num) VALUES (?,?,?,?,?,?)";
                PreparedStatement ps = conn.prepareStatement(sql, new String[] {"id"});
-               ps.setInt(1, show.getYear());
+               ps.setInt(1, PartyConfig.YEAR);
                ps.setString(2, show.getName());
                ps.setString(3, show.getOrganization());
                ps.setString(4, show.getCategory());

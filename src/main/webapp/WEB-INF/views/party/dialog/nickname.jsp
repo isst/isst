@@ -11,10 +11,8 @@ $(function() {
 		if (nickname) {
 			$.isst.api.updateNickname(nickname, function(response) {
 				if (response.code > 0) {
-					$.post($.isst.party.url + '/login', {id: $.isst.userId}, function() {
-						$('#nickname .ui-btn-text').text(nickname);
-						$('.ui-dialog').dialog('close');
-					});
+					$('#nickname .ui-btn-text').text(nickname);
+					$('.ui-dialog').dialog('close');
 				} else {
 					alert(response.message);
 				}
