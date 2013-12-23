@@ -31,7 +31,7 @@
 					window.location.href = returnUrl ? returnUrl : $.isst.party.createUrl("index.html");
 				} else {
 					$submit.prev('span').find('.ui-btn-text').text("登录");
-					$submit.button('ensable');
+					$submit.button('enable');
 					alert(response.message);
 				}
 			});

@@ -13,6 +13,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 <body>
 <p>晚会说明</p>
+<a href="http://www.baidu.com">跳转到百度</a>
 <script type="text/javascript" src="resources/js/jquery-2.0.3.min.js"></script>
 </body>
 </html>

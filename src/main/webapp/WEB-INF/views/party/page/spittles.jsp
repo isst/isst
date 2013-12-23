@@ -29,7 +29,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <p>${spittle.content}</p>
         <span class="ui-li-count spittle-likes" style="right:70px;">赞  <em>${spittle.likes}</em></span>
         <span class="ui-li-count spittle-dislikes">踩  <em>${spittle.dislikes}</em></span>
-        <p class="ui-li-aside"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${spittle.postDate}" /></p>
+        <p class="ui-li-aside"><fmt:formatDate pattern="MM-dd HH:mm:ss" value="${spittle.postDate}" /></p>
         <div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;">
         	<input type="button" data-role="button" class="spittle-like" ${spittle.isLiked==1||spittle.isDisliked==1?'disabled="disabled"':''} data-theme="${spittle.isLiked==1?'b':''}" value="赞" />
         	<input type="button" data-role="button" class="spittle-dislike" ${spittle.isLiked==1||spittle.isDisliked==1?'disabled="disabled"':''} value="踩" data-theme="${spittle.isDisliked==1?'b':''}" />
@@ -130,7 +130,7 @@ $(function() {
 	        '<p>'+spittle.content+'</p>' +
 	        '<span class="ui-li-count spittle-likes" style="right:70px;">赞  <em>'+spittle.likes+'</em></span>' +
 	        '<span class="ui-li-count spittle-dislikes">踩  <em>'+spittle.dislikes+'</em></span>' +
-	        '<p class="ui-li-aside">'+new Date(spittle.postDate).format("yyyy-MM-dd hh:mm:ss")+'</p>' +
+	        '<p class="ui-li-aside">'+new Date(spittle.postDate).format("MM-dd hh:mm:ss")+'</p>' +
 	        '<div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;" class="controlgrop">' +
 	        	'<input type="button" class="spittle-like" value="赞" />' +
 	        	'<input type="button" class="spittle-dislike" value="踩" />' +
