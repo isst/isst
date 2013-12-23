@@ -27,7 +27,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <li class="spittle" data-spittleId="${spittle.id}">
        <h2>${user.id==1?spittle.id:''}${user.id==1?'.':''}${spittle.nickname}</h2>
         <p>${spittle.content}</p>
-        <span class="ui-li-count spittle-likes" style="right:50px;">赞  <em>${spittle.likes}</em></span>
+        <span class="ui-li-count spittle-likes" style="right:70px;">赞  <em>${spittle.likes}</em></span>
         <span class="ui-li-count spittle-dislikes">踩  <em>${spittle.dislikes}</em></span>
         <p class="ui-li-aside"><fmt:formatDate pattern="yyyy-MM-dd HH:mm:ss" value="${spittle.postDate}" /></p>
         <div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;">
@@ -128,7 +128,7 @@ $(function() {
 				var $li = $('<li class="spittle" data-spittleId="'+spittle.id+'">' +
 	        '<h2>'+ spittle.nickname+'</h2>' +
 	        '<p>'+spittle.content+'</p>' +
-	        '<span class="ui-li-count spittle-likes" style="right:50px;">赞  <em>'+spittle.likes+'</em></span>' +
+	        '<span class="ui-li-count spittle-likes" style="right:70px;">赞  <em>'+spittle.likes+'</em></span>' +
 	        '<span class="ui-li-count spittle-dislikes">踩  <em>'+spittle.dislikes+'</em></span>' +
 	        '<p class="ui-li-aside">'+new Date(spittle.postDate).format("yyyy-MM-dd hh:mm:ss")+'</p>' +
 	        '<div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;" class="controlgrop">' +
