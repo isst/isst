@@ -108,10 +108,10 @@ public class ShowDao {
     }
     
     public int update(Show show) {
-        String sql = "UPDATE yd_show SET year=?,name=?,organization=?,category=?,status=?,sort_num=? WHERE id=?";
+        String sql = "UPDATE yd_show SET name=?,organization=?,category=?,status=?,sort_num=? WHERE id=?";
         
         return jdbcTemplate.update(sql, new Object[] {
-                show.getYear(), show.getName(), show.getOrganization(), show.getCategory(), show.getStatus(), show.getSortNum(), show.getId()
+                show.getName(), show.getOrganization(), show.getCategory(), show.getStatus(), show.getSortNum(), show.getId()
         });
     }
     

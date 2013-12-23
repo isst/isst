@@ -6,16 +6,24 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <base href="<%=basePath%>" />
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title><c:out value="${title}" /></title>
-	<link rel="stylesheet"  href="<%=basePath%>resources/jquery.mobile/themes/default/jquery.mobile-1.3.2.min.css" />
-	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
-	<script src="<%=basePath%>resources/js/jquery-2.0.3.min.js"></script>
-	<script src="<%=basePath%>resources/jquery.mobile/jquery.mobile-1.3.2.min.js"></script>
-	<script type="text/javascript">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><c:out value="${title}" /></title>
+<link rel="stylesheet"  href="<%=basePath%>resources/jquery.mobile/themes/default/jquery.mobile-1.3.2.min.css" />
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700">
+<script src="<%=basePath%>resources/js/jquery-2.0.3.min.js"></script>
+<script src="<%=basePath%>resources/jquery.mobile/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript">
+		window.alert = function(message) {
+			$('#alert').find('p').html(message);
+			$('#alert').popup("open");
+		};
+		
 		$(document).bind("mobileinit", function () {
     		//$.mobile.ajaxEnabled = false;
+    		$.mobile.defaultPageTransition = 'none';
+      		$.mobile.defaultDialogTransition = 'none';
+      		$.mobile.useFastClick = true;
 		});
 		
 		$.isst = {
@@ -62,7 +70,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					data: data || {},
 					type: type,
 					dataType: 'json',
-					success: callback
+					success: callback,
+					error: function() {
+						alert("服务器错误");
+					}
 				});
 			},
 			login: function(name, password, callback) {
@@ -94,4 +105,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				$.isst.api.del('/users/{userId}/spittles/{spittleId}', {userId: $.isst.userId, spittleId: spittleId}, callback);
 			}
 		};
-	</script>
+</script>
+<style type="text/css">
+	.ui-header .ui-title { white-space: normal;}
+</style>

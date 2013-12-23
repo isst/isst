@@ -23,10 +23,31 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
   	<div data-role="footer" data-id="page-footer" data-position="fixed" data-theme="d">
   		<c:if test="${activeNav=='spittles'}">
+
+<style type="text/css">
+#spittleForm #spittleContentBlock {
+	width:89%; 
+	margin-left:1%;
+	vertical-align : middle;
+}
+#spittleForm #spittleSubmitBlock {
+	width:9%; 
+	margin-left:1%;
+	vertical-align : middle;
+}
+@media all and (max-width:480px) {
+    #spittleForm #spittleContentBlock {
+        width   : 79%;
+    }
+    #spittleForm #spittleSubmitBlock {
+        width   : 19%;
+    }
+}
+</style>
 <form action="" method="post" id="spittleForm">
 <div class="ui-grid-a">
-<div class="ui-block-a" style="width:89%; margin-left:1%;"><input type="text" id="spittleContent" placeholder="请输入内容..." /></div>
-<div class="ui-block-b" style="width:8%; margin-left:1%;"><input type="submit" id="spittleSubmit" value="发布"  data-theme="b" /></div>
+<div class="ui-block-a" id="spittleContentBlock"><input type="text" id="spittleContent" placeholder="请输入内容..." /></div>
+<div class="ui-block-b" id="spittleSubmitBlock"><input type="submit" id="spittleSubmit" value="发布"  data-theme="b" /></div>
 </div>
 </form>
 <script type="text/javascript">
@@ -56,6 +77,7 @@ $(function() {
   		</c:if>
 	    <tiles:insertAttribute name="footer" />
 	</div>
+	<div data-role="popup" id="alert" class="ui-content" data-position-to="window" data-theme="e" style="max-width:350px;"><p></p></div>
 </div>
 </body>
 </html>

@@ -19,9 +19,9 @@ public class UserServiceImpl implements UserService {
             if (user.getPassword().equals(userDao.encryptPassword(password))) {
                 return new ResultHolder(user.getId());
             }
-            return new ResultHolder("用户名或密码错误！");
+            return new ResultHolder("密码错误");
         }
-        return new ResultHolder("用户不存在！");
+        return new ResultHolder("用户不存在");
     }
 
     @Override

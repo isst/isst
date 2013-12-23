@@ -56,6 +56,8 @@
   	<div data-role="footer" data-position="fixed" data-theme="a">
   		<h1>©2013&nbsp;&nbsp;ISST项目组</h1>
   	</div>
+  	<div data-role="popup" id="alert" class="ui-content" data-position-to="window" data-theme="e" style="max-width:350px;"><p></p></div>
 </div>
+
 </body>
 </html>
