@@ -25,7 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   		<c:if test="${activeNav=='spittles'}">
 <form action="" method="post" id="spittleForm">
 <div class="ui-grid-a">
-<div class="ui-block-a" style="width:90%"><input type="text" id="spittleContent" placeholder="请输入内容..." /></div>
+<div class="ui-block-a" style="width:89%; margin-left:1%;"><input type="text" id="spittleContent" placeholder="请输入内容..." /></div>
 <div class="ui-block-b" style="width:8%; margin-left:1%;"><input type="submit" id="spittleSubmit" value="发布"  data-theme="b" /></div>
 </div>
 </form>
@@ -34,7 +34,10 @@ $(function() {
 	$("#spittleForm").submit(function() {
 		var $spittleContent = $("#spittleContent");
 		var content = $spittleContent.val();
+		var $spittleSubmit = $('#spittleSubmit');
 		if (content) {
+			$spittleSubmit.prev('span').find('.ui-btn-text').text("发布中...");
+			$spittleSubmit.button('disable');
 			$.isst.api.postSpittle(content, function(response) {
 				if (response.code > 0) {
 					$spittleContent.val("");
@@ -42,6 +45,8 @@ $(function() {
 				} else {
 					alert(response.message);
 				}
+				$spittleSubmit.prev('span').find('.ui-btn-text').text("发布");
+				$spittleSubmit.button('enable');
 			});
 		}
 		return false;

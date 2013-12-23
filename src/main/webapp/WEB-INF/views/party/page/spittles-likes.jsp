@@ -14,9 +14,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <div data-role="navbar" data-id="spittles">
 	<ul>
-		<li><a href="<%=basePath%>party/spittles.html" data-ajax="false" class="ui-btn-active ui-state-persist">新鲜出炉</a></li>
-		<li><a href="<%=basePath%>party/spittles-likes.html" data-ajax="false">不明觉厉</a></li>
-		<li><a href="<%=basePath%>party/spittles-dislikes.html" data-ajax="false">累觉不爱</a></li>
+		<li><a href="<%=basePath%>party/spittles.html" data-ajax="false">新鲜出炉</a></li>
+		<li><a href="<%=basePath%>party/spittles-likes.html" class="${isLike?'ui-btn-active ui-state-persist':''}" data-ajax="false">不明觉厉</a></li>
+		<li><a href="<%=basePath%>party/spittles-dislikes.html" class="${isLike?'':'ui-btn-active ui-state-persist'}" data-ajax="false">累觉不爱</a></li>
 	</ul>
 </div>
 <br />
@@ -43,26 +43,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     </c:forEach>
 </ul>
 
-<input type="button" data-role="button" id="moreSpittles"  value="更多" data-theme="b" />
-
 <script type="text/javascript">
-Date.prototype.format = function(fmt)   {
-  var o = {   
-    "M+" : this.getMonth()+1, 
-    "d+" : this.getDate(),
-    "h+" : this.getHours(),
-    "m+" : this.getMinutes(),
-    "s+" : this.getSeconds(),
-    "q+" : Math.floor((this.getMonth()+3)/3),
-    "S"  : this.getMilliseconds()
-  };   
-  if(/(y+)/.test(fmt))   
-    fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));   
-  for(var k in o)   
-    if(new RegExp("("+ k +")").test(fmt))   
-  fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));   
-  return fmt;   
-};
 $(function() {
 	var dislikeClick = function() {
 		var $this = $(this);
@@ -112,65 +93,10 @@ $(function() {
 	$('.spittle-like').click(likeClick);
 	$('.spittle-delete').click(deleteClick);
 	
-	var page = 1;
-	var $spittleList = $('#spittleList');
-	$("#moreSpittles").click(function() {
-		var $this = $(this);
-		$this.prev('span').find('.ui-btn-text').text('加载中...');
-		$this.button('disable');
-		$.isst.api.getSpittles(<c:out value="${spittles[0].id}" />, ++page, 20, function(spittles) {
-			if (spittles.length == 0) {
-				$this.prev('span').find('.ui-btn-text').text('没有更多了');
-				return ;
-			}
-			for (var i=0; i<spittles.length; i++) {
-				var spittle = spittles[i];
-				var $li = $('<li class="spittle" data-spittleId="'+spittle.id+'">' +
-	        '<h2>'+ spittle.nickname+'</h2>' +
-	        '<p>'+spittle.content+'</p>' +
-	        '<span class="ui-li-count spittle-likes" style="right:50px;">赞  <em>'+spittle.likes+'</em></span>' +
-	        '<span class="ui-li-count spittle-dislikes">踩  <em>'+spittle.dislikes+'</em></span>' +
-	        '<p class="ui-li-aside">'+new Date(spittle.postDate).format("yyyy-MM-dd hh:mm:ss")+'</p>' +
-	        '<div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;" class="controlgrop">' +
-	        	'<input type="button" class="spittle-like" value="赞" />' +
-	        	'<input type="button" class="spittle-dislike" value="踩" />' +
-	        '</div>' +
-	    '</li>');
-				if (spittle.isLiked == 1 || spittle.isDisliked == 1) {
-					$li.find('.spittle-like, .spittle-dislike').attr('disabled', 'disabled');
-				}
-				
-				if (spittle.isLiked == 1) {
-					$li.find('.spittle-like').attr('data-theme', 'b');
-				}
-				
-				if (spittle.isDisliked == 1) {
-					$li.find('.spittle-dislike').attr('data-theme', 'b');
-				}
-				
-				$spittleList.append($li);
-				$li.find('.spittle-dislike').click(dislikeClick);
-				$li.find('.spittle-like').click(likeClick);
-				
-				if ($.isst.userId == 1) {
-					$li.append('<div class="spittle-delete-area"><input type="button" value="删除" data-inline="true" data-mini="true" class="spittle-delete" data-icon="delete" /></div>');
-					$li.find('.spittle-delete').click(deleteClick);
-					$li.find('h2').prepend(spittle.id + '.');
-				}
-			}
-			
-			$spittleList.listview("refresh");
-			$spittleList.find("input[type='button']").button();
-			$spittleList.find('.controlgrop').controlgroup();
-			$this.prev('span').find('.ui-btn-text').text('更多');
-			$this.button('enable');
-		});
-	});
-	
 	$("#refreshSpittles").click(function() {
 		$(this).prev('span').find('.ui-btn-text').text("刷新中...");
 		$(this).button('disable');
-		window.location.href="<%=basePath%>party/spittles.html";
+		window.location.href="<%=basePath%>party/spittles-likes.html";
 	});
 });
 </script>

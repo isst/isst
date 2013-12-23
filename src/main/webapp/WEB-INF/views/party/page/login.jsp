@@ -16,15 +16,26 @@
 		$("#loginform").submit(function() {
 			var name = $('#username').val();
 			var password = $('#password').val();
+			
+			if (!name || !password) {
+				return false;
+			}
+			
 			var returnUrl = '<c:out value="${returnUrl}" />';
 			returnUrl = returnUrl ? $.isst.party.createUrl(returnUrl) : null;
+			var $submit = $('#loginSubmit');
+			$submit.prev('span').find('.ui-btn-text').text("登录中...");
+			$submit.button('disable');
 			$.isst.api.login(name, password, function(response) {
 				if (response.code > 0) {
 					window.location.href = returnUrl ? returnUrl : $.isst.party.createUrl("index.html");
 				} else {
+					$submit.prev('span').find('.ui-btn-text').text("登录");
+					$submit.button('ensable');
 					alert(response.message);
 				}
 			});
+			
 			return false;
 		});
 	});

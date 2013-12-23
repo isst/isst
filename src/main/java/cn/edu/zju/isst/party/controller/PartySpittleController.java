@@ -34,4 +34,34 @@ public class PartySpittleController extends BaseController {
 
         return "spittles.page";
     }
+
+    @RequestMapping("/spittles-likes.html")
+    public String likes(@ModelAttribute("user") LoggedUser user, Model model) {
+        if (user.getId() == 0) {
+            return "redirect:login.html";
+        }
+
+        List<UserSpittle> userSpittles = spittleDao.retrieve(user.getId(), "likes", 1, 50, 0);
+
+        model.addAttribute("spittles", userSpittles);
+        model.addAttribute("title", "我要吐槽");
+        model.addAttribute("isLike", true);
+
+        return "spittles-likes.page";
+    }
+
+    @RequestMapping("/spittles-dislikes.html")
+    public String dislikes(@ModelAttribute("user") LoggedUser user, Model model) {
+        if (user.getId() == 0) {
+            return "redirect:login.html";
+        }
+
+        List<UserSpittle> userSpittles = spittleDao.retrieve(user.getId(), "dislikes", 1, 50, 0);
+
+        model.addAttribute("spittles", userSpittles);
+        model.addAttribute("title", "我要吐槽");
+        model.addAttribute("isLike", false);
+        
+        return "spittles-likes.page";
+    }
 }
