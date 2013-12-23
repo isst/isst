@@ -1,6 +1,7 @@
 package cn.edu.zju.isst.entity;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -23,6 +24,8 @@ public class Spittle {
     private int dislikes;
 
     private int is_display;
+    
+    private Date postDate;
     
     public int getId() {
         return id;
@@ -90,5 +93,12 @@ public class Spittle {
 
     public void setIsDisplay(int isDisplay) {
         this.is_display = isDisplay;
+    }
+    
+    public Date getPostDate() {
+        if (postDate == null) {
+            postDate =  new Date(post_time * 1000);
+        }
+        return postDate;
     }
 }

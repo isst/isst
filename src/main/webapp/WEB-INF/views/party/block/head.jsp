@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<script src="<%=basePath%>resources/jquery.mobile/jquery.mobile-1.3.2.min.js"></script>
 	<script type="text/javascript">
 		$(document).bind("mobileinit", function () {
-    		$.mobile.ajaxEnabled = false;
+    		//$.mobile.ajaxEnabled = false;
 		});
 		
 		$.isst = {
@@ -51,6 +51,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				data['_method'] = 'PUT';
 				$.isst.api._ajax(path, data, callback, 'post');
 			},
+			del: function(path, data, callback) {
+				data['_method'] = 'DELETE';
+				$.isst.api._ajax(path, data, callback, 'post');
+			},
 			_ajax: function(path, data, callback, type) {
 				data._path = path;
 				$.ajax({
@@ -75,6 +79,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			},
 			showVote: function(showId, callback) {
 				$.isst.api.post('/users/{userId}/shows/{showId}/votes', {userId: $.isst.userId, showId: showId}, callback);
+			},
+			like: function(spittleId, callback, isLike) {
+				isLike = isLike == undefined ? 1 : isLike;
+				$.isst.api.post('/users/{userId}/spittles/{spittleId}/likes', {userId: $.isst.userId, spittleId: spittleId, isLike: isLike}, callback);
+			},
+			dislike: function(spittleId, callback) {
+				$.isst.api.like(spittleId, callback, 0);
+			},
+			getSpittles: function(id, page, pageSize, callback) {
+				$.isst.api.get('/users/{userId}/spittles', {userId: $.isst.userId, id: id, page: page, pageSize: pageSize}, callback);
+			},
+			deleteSpittle: function(spittleId, callback) {
+				$.isst.api.del('/users/{userId}/spittles/{spittleId}', {userId: $.isst.userId, spittleId: spittleId}, callback);
 			}
 		};
 	</script>

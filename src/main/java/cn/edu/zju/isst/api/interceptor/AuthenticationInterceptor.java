@@ -58,7 +58,6 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
         }
         
         String expectedToken = StringUtils.md5(sb.toString());
-
         if (expectedToken.equals(token)) {
             if (expire == null || System.currentTimeMillis()/1000 - Long.valueOf(expire).longValue() > 600) {
                 responseError(response, "认证失效");

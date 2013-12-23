@@ -106,9 +106,23 @@ public class PartyApiController extends BaseController {
         }
         
         String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + "/isst/api" + path;
-        
         if (method.equals("GET")) {
-            return restTemplate.getForObject(url, String.class, data);
+            if (!data.isEmpty()) {
+                StringBuilder urlBuilder = new StringBuilder(url);
+                if (url.indexOf('?') == -1) {
+                    urlBuilder.append("?");
+                }
+                int i=0;
+                for (Map.Entry<String, String> entry : data.entrySet()) {
+                    if (i>0) {
+                        urlBuilder.append("&");
+                    }
+                    urlBuilder.append(entry.getKey()).append("=").append(entry.getValue());
+                    i++;
+                }
+                url = urlBuilder.toString();
+            }
+            return restTemplate.getForObject(url, String.class);
         } else {
             data.put("_method", method);
             LinkedMultiValueMap<String, String> resp = new LinkedMultiValueMap<String, String>();

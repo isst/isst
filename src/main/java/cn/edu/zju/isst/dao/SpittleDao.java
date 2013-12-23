@@ -50,18 +50,13 @@ public class SpittleDao {
     
     @Transactional
     public PushingSpittle getPushingSpittle() {
-        PushingSpittle pushingSpittle = getFirstPushingSpittle(0);
-        
-        if (pushingSpittle == null) {
-            pushingSpittle = getFirstPushingSpittle(2);
-            if (pushingSpittle == null) {
-                String resetSql = "UPDATE yd_spittle SET is_display=2 WHERE id IN (SELECT id FROM (SELECT id FROM yd_spittle WHERE is_display=1 ORDER BY likes DESC, dislikes DESC, id DESC LIMIT 0, 20) yds)";
-                jdbcTemplate.update(resetSql);
-                pushingSpittle = getFirstPushingSpittle(2);
-            }
-        }
-        
-        if (null != pushingSpittle) {
+        String sql = "SELECT * FROM yd_spittle WHERE is_display=? ORDER BY likes_diff DESC, id ASC LIMIT 0, 1";
+        List<PushingSpittle> spittles = jdbcTemplate.query(sql, new Object[] {0}, getPushingSpittleRowMapper());
+        PushingSpittle pushingSpittle = null;
+        if (spittles.isEmpty()) {
+            pushingSpittle = getRandomPushingSpittle();
+        } else {
+            pushingSpittle = spittles.get(0);
             String updateSql = "UPDATE yd_spittle SET is_display=1 WHERE id=?";
             jdbcTemplate.update(updateSql, new Object[] {pushingSpittle.getSpittleId()});
         }
@@ -69,9 +64,9 @@ public class SpittleDao {
         return pushingSpittle;
     }
     
-    private PushingSpittle getFirstPushingSpittle(int display) {
-        String sql = "SELECT * FROM yd_spittle WHERE is_display=? ORDER BY likes DESC, dislikes DESC, id ASC LIMIT 0, 1";
-        List<PushingSpittle> spittles = jdbcTemplate.query(sql, new Object[] {display}, getPushingSpittleRowMapper());
+    private PushingSpittle getRandomPushingSpittle() {
+        String sql = "SELECT * FROM yd_spittle t1 JOIN (SELECT FLOOR(RAND()*((SELECT MAX(id) FROM yd_spittle)-(SELECT MIN(id) FROM yd_spittle))+(SELECT MIN(id) FROM yd_spittle)) id) t2 WHERE t1.id >= t2.id ORDER BY t1.id LIMIT 1";
+        List<PushingSpittle> spittles = jdbcTemplate.query(sql, getPushingSpittleRowMapper());
         if (spittles.isEmpty()) {
             return null;
         }
@@ -107,7 +102,7 @@ public class SpittleDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(new PreparedStatementCreator() {
            public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-               String sql = "INSERT INTO yd_spittle (year,user_id,content,post_time,likes,dislikes) VALUES (?,?,?,?,?,?)";
+               String sql = "INSERT INTO yd_spittle (year,user_id,content,post_time,likes,dislikes,likes_diff) VALUES (?,?,?,?,?,?,0)";
                PreparedStatement ps = conn.prepareStatement(sql, new String[] {"id"});
                ps.setInt(1, spittle.getYear());
                ps.setInt(2, spittle.getUserId());
@@ -219,7 +214,7 @@ public class SpittleDao {
         StringBuilder updateSql = new StringBuilder("UPDATE yd_spittle SET ");
         String updateField = isLike == 0 ? "dislikes" : "likes";
         updateSql.append(updateField).append("=").append(updateField).append("+1");
-        updateSql.append(", is_display='0' WHERE id=?");
+        updateSql.append(", is_display='0', likes_diff=likes-dislikes WHERE id=?");
         jdbcTemplate.update(updateSql.toString(), new Object[] {spittleId});
         
         return true;

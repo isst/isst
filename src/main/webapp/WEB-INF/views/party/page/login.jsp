@@ -38,7 +38,7 @@
 		    	<label for="username" class="ui-hidden-accessible">用户名</label>
 		    	<input type="text" name="username" id="username" placeholder="用户名" value="" class="required" /><br>
 		    	<label for="password" class="ui-hidden-accessible">密码</label>
-		    	<input type="password" name="password" id="password" placeholder="密码" value="" class="required" />
+		    	<input type="password" name="password" id="password" placeholder="密码" value="" class="required" /><br>
 			    <input type="submit" data-role="button" data-theme="b" id="loginSubmit" value="登录" />
 		    </form>
 	  </div>
