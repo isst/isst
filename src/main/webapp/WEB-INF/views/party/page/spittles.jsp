@@ -108,7 +108,7 @@ $(function() {
 	var $spittleList = $('#spittleList');
 	$("#moreSpittles").click(function() {
 		var $this = $(this);
-		$.isst.api.getSpittles(<c:out value="${spittles[0].id}" />, ++page, 2, function(spittles) {
+		$.isst.api.getSpittles(<c:out value="${spittles[0].id}" />, ++page, 20, function(spittles) {
 			if (spittles.length == 0) {
 				$this.button('disable');
 			}

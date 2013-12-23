@@ -21,7 +21,7 @@ public class PartySpittleController extends BaseController {
     @RequestMapping("/spittles.html")
     public String index(@RequestParam(value = "id", required = false, defaultValue = "0") int id,
             @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-            @RequestParam(value = "pageSize", required = false, defaultValue = "2") int pageSize,
+            @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize,
             @ModelAttribute("user") LoggedUser user, Model model) {
         if (user.getId() == 0) {
             return "redirect:login.html";
