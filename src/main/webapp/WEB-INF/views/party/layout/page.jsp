@@ -8,7 +8,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!DOCTYPE html>
 <html lang="zh-cn">
 <head>
-	<tiles:insertAttribute name="head" />
+<tiles:insertAttribute name="head" />
 </head>
 <body>
 <div id="page" data-role="page">
@@ -20,55 +20,62 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
 	<div data-role="content" class="content">
 	    <tiles:insertAttribute name="content" />
+	    <div id="toTop"><input type="button" value="Top" data-icon="arrow-u" data-mini="true" /></div>
 	</div>
   	<div data-role="footer" data-id="page-footer" data-position="fixed" data-theme="d">
   		<c:if test="${activeNav=='spittles'}">
 
 <style type="text/css">
-#spittleForm #spittleContentBlock {
+.spittle-form #spittleContentBlock {
 	width:89%; 
 	margin-left:1%;
 	vertical-align : middle;
 }
-#spittleForm #spittleSubmitBlock {
+.spittle-form #spittleSubmitBlock {
 	width:9%; 
 	margin-left:1%;
 	vertical-align : middle;
 }
 @media all and (max-width:480px) {
-    #spittleForm #spittleContentBlock {
+    .spittle-form #spittleContentBlock {
         width   : 79%;
     }
-    #spittleForm #spittleSubmitBlock {
+    .spittle-form #spittleSubmitBlock {
         width   : 19%;
     }
 }
 </style>
-<form action="" method="post" id="spittleForm">
+<form action="" method="post" id="${spittlePage}SpittleForm" class="spittle-form">
 <div class="ui-grid-a">
-<div class="ui-block-a" id="spittleContentBlock"><input type="text" id="spittleContent" placeholder="请输入内容..." /></div>
-<div class="ui-block-b" id="spittleSubmitBlock"><input type="submit" id="spittleSubmit" value="发布"  data-theme="b" /></div>
+<div class="ui-block-a" id="spittleContentBlock"><input type="text" class="spittle-content" placeholder="小伙伴们快来吐槽吧..." /></div>
+<div class="ui-block-b" id="spittleSubmitBlock"><input type="submit" class="spittle-submit" value="发布"  data-theme="b" /></div>
 </div>
 </form>
 <script type="text/javascript">
 $(function() {
-	$("#spittleForm").submit(function() {
-		var $spittleContent = $("#spittleContent");
+	$("#${spittlePage}SpittleForm").submit(function() {
+		var $spittleContent = $(this).find('.spittle-content');
 		var content = $spittleContent.val();
-		var $spittleSubmit = $('#spittleSubmit');
-		if (content) {
+		var $spittleSubmit = $(this).find('.spittle-submit');
+		if (content.length >=5 && content.length <=140) {
 			$spittleSubmit.prev('span').find('.ui-btn-text').text("发布中...");
 			$spittleSubmit.button('disable');
 			$.isst.api.postSpittle(content, function(response) {
 				if (response.code > 0) {
 					$spittleContent.val("");
-					window.location.href = "<%=basePath%>party/spittles.html";
+					if (window.location.href.indexOf('spittles.html') > 0) {
+						$("#refreshSpittles").click();
+					} else {
+						window.location.href = "<%=basePath%>party/spittles.html";
+					}
 				} else {
 					alert(response.message);
 				}
 				$spittleSubmit.prev('span').find('.ui-btn-text').text("发布");
 				$spittleSubmit.button('enable');
 			});
+		} else {
+			alert("请输入5~140字数的吐槽内容");
 		}
 		return false;
 	});

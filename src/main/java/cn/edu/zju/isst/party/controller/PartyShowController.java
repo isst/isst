@@ -9,7 +9,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.edu.zju.isst.api.service.ShowService;
+import cn.edu.zju.isst.config.PartyConfig;
+import cn.edu.zju.isst.dao.ShowDao;
 import cn.edu.zju.isst.entity.LoggedUser;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Show;
@@ -17,7 +18,7 @@ import cn.edu.zju.isst.entity.Show;
 @Controller
 public class PartyShowController extends BaseController {
     @Autowired
-    private ShowService showService;
+    private ShowDao showDao;
 
     @RequestMapping("/shows.html")
     public String index(@ModelAttribute("user") LoggedUser user, Model model) {
@@ -25,7 +26,7 @@ public class PartyShowController extends BaseController {
             return "redirect:login.html";
         }
 
-        model.addAttribute("shows", showService.retrieveForUser(user.getId()));
+        model.addAttribute("shows", showDao.retrieveForUser(user.getId()));
         model.addAttribute("title", "节目评分");
         return "shows.page";
     }
@@ -41,7 +42,7 @@ public class PartyShowController extends BaseController {
         if (showId == 0) {
             show = new Show();
         } else {
-            show = showService.get(showId);
+            show = showDao.get(showId);
         }
 
         model.addAttribute("show", show);
@@ -57,15 +58,16 @@ public class PartyShowController extends BaseController {
             return "redirect:login.html";
         }
         
-        Show show = showService.get(showId);
+        Show show = showDao.get(showId);
         
         if (null == show) {
             return "redirect:index.html";
         }
         
         model.addAttribute("show", show);
-        model.addAttribute("hasVote", showService.hasVote(user.getId(), showId));
+        model.addAttribute("hasVote", showDao.hasVote(user.getId(), showId));
         model.addAttribute("title", show.getName());
+        model.addAttribute("canVote", showDao.getUserVotes(user.getId()) < (user.getType() == 0 ? PartyConfig.STUDENT_MAX_VOTES : PartyConfig.TEACHER_MAX_VOTES));
         
         return "show-vote.dialog";
     }
@@ -80,7 +82,13 @@ public class PartyShowController extends BaseController {
         if (show.getName() == null || show.getName().equals("")) {
             return new ResultHolder("节目名称不能为空");
         }
-        showService.save(show);
+        
+        if (show.getId() > 0) {
+            showDao.update(show);
+        } else {
+            showDao.create(show);
+        }
+        
         return new ResultHolder(show.getId());
     }
 }

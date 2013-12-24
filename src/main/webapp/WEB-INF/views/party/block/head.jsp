@@ -101,11 +101,33 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			getSpittles: function(id, page, pageSize, callback) {
 				$.isst.api.get('/users/{userId}/spittles', {userId: $.isst.userId, id: id, page: page, pageSize: pageSize}, callback);
 			},
+			getLikeSpittles: function(callback) {
+				$.isst.api.get('/users/{userId}/spittles/likes', {userId: $.isst.userId, isLike: 1}, callback);
+			},
+			getDislikeSpittles: function(callback) {
+				$.isst.api.get('/users/{userId}/spittles/likes', {userId: $.isst.userId, isLike: 0}, callback);
+			},
 			deleteSpittle: function(spittleId, callback) {
 				$.isst.api.del('/users/{userId}/spittles/{spittleId}', {userId: $.isst.userId, spittleId: spittleId}, callback);
 			}
 		};
+		
+		$(function() {
+	    $(window).scroll(function() {
+	        if($(this).scrollTop() != 0) {
+	            $('#toTop').fadeIn();    
+	        } else {
+	            $('#toTop').fadeOut();
+	        }
+	    });
+	
+	    $('#toTop').click(function() {
+	        $('body,html').animate({scrollTop:0},800);
+	    });    
+	});
 </script>
 <style type="text/css">
-	.ui-header .ui-title { white-space: normal;}
+	.ui-header .ui-title { white-space: normal; margin: 0.6em 0 0.8em; text-align: center;}
+	.ui-li-heading, .ui-li-desc { white-space: normal; }
+	#toTop {position: fixed; bottom: 150px; right: 30px; width: 70px; cursor: pointer; display: none; z-index:1000;}
 </style>

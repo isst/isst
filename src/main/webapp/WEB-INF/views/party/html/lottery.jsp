@@ -31,6 +31,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<a href="javascript:void(0);" class="prize" data-prize="1" id="prize1">一等奖</a>
 	    <a href="javascript:void(0);" class="prize" data-prize="2" id="prize2">二等奖</a>
 	    <a href="javascript:void(0);" class="prize" data-prize="3" id="prize3">三等奖</a>
+	    <a href="javascript:void(0);" class="prize" data-prize="4" id="prize4">幸运奖</a>
 	    <a href="javascript:void(0);" id="stop" class="stop" style="display:none">停止</a>
 		<div class="bg"></div>
 	</div>

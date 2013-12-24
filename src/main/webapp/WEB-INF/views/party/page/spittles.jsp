@@ -6,11 +6,14 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <style type="text/css">
-.ui-li-aside { margin-top:0;}
 .spittle { position: relative;}
 .spittle .spittle-delete-area { position: absolute; right: 5px; bottom:5px;}
+.spittle .spittle-post-time { position: absolute; right: 0.5em; top: 1em;}
+.spittle .spittle-content { margin:1em 0.5em 0.5em 1em;}
+.spittle-likes a.ui-link, .spittle-dislikes a.ui-link { color: #fff;}
 </style>
 <c:set var="activeNav" value="spittles" scope="request" />
+<c:set var="spittlePage" value="postTime" scope="request" />
 
 <div data-role="navbar" data-id="spittles">
 	<ul>
@@ -26,13 +29,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<c:forEach var="spittle" items="${spittles}">
     <li class="spittle" data-spittleId="${spittle.id}">
        <h2>${user.id==1?spittle.id:''}${user.id==1?'.':''}${spittle.nickname}</h2>
-        <p>${spittle.content}</p>
-        <span class="ui-li-count spittle-likes" style="right:70px;">赞  <em>${spittle.likes}</em></span>
-        <span class="ui-li-count spittle-dislikes">踩  <em>${spittle.dislikes}</em></span>
-        <p class="ui-li-aside"><fmt:formatDate pattern="MM-dd HH:mm:ss" value="${spittle.postDate}" /></p>
-        <div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;">
-        	<input type="button" data-role="button" class="spittle-like" ${spittle.isLiked==1||spittle.isDisliked==1?'disabled="disabled"':''} data-theme="${spittle.isLiked==1?'b':''}" value="赞" />
-        	<input type="button" data-role="button" class="spittle-dislike" ${spittle.isLiked==1||spittle.isDisliked==1?'disabled="disabled"':''} value="踩" data-theme="${spittle.isDisliked==1?'b':''}" />
+        <p class="spittle-content">${spittle.content}</p>
+        <p class="spittle-post-time"><fmt:formatDate pattern="MM-dd HH:mm:ss" value="${spittle.postDate}" /></p>
+        <div class="spittle-control">
+        	<a href="#" data-role="button" data-mini="true" data-inline="true" class="spittle-like ${spittle.isLiked==1||spittle.isDisliked==1?'ui-disabled':''}" data-theme="${spittle.isLiked==1?'b':''}">赞&nbsp;<em>${spittle.likes}</em></a>
+        	<a href="#" data-role="button" data-mini="true" data-inline="true" class="spittle-dislike ${spittle.isLiked==1||spittle.isDisliked==1?'ui-disabled':''}" data-theme="${spittle.isDisliked==1?'b':''}">踩&nbsp;<em>${spittle.dislikes}</em></a>
         </div>
         <c:if test="${user.id==1}">
         <div class="spittle-delete-area">
@@ -68,28 +69,30 @@ $(function() {
 		var $this = $(this);
 		var $spittle = $this.parents('.spittle');
 		var spittleId = $spittle.attr("data-spittleId");
+		$spittle.find('.spittle-like, .spittle-dislike').addClass('ui-disabled');
 		$.isst.api.dislike(spittleId, function(response) {
 			if (response.code > 0) {
-				$this.buttonMarkup({theme: 'b'}).button('refresh');
-				$spittle.find('.spittle-like, .spittle-dislike').button('disable');
-				$spittle.find('.spittle-dislikes em').text(parseInt($spittle.find('.spittle-dislikes em').text())+1);
+				$this.buttonMarkup({theme: 'b'});
+				$spittle.find('.spittle-dislike em').text(parseInt($spittle.find('.spittle-dislike em').text())+1);
 			} else {
 				alert(response.message);
+				//$spittle.find('.spittle-like, .spittle-dislike').removeClass('ui-disabled');
 			}
 		});
 	};
 	
-	var  likeClick = function() {
+	var likeClick = function() {
 		var $this = $(this);
 		var $spittle = $this.parents('.spittle');
 		var spittleId = $spittle.attr("data-spittleId");
+		$spittle.find('.spittle-like, .spittle-dislike').addClass('ui-disabled');
 		$.isst.api.like(spittleId, function(response) {
 			if (response.code > 0) {
-				$this.buttonMarkup({theme: 'b'}).button('refresh');
-				$spittle.find('.spittle-like, .spittle-dislike').button('disable');
-				$spittle.find('.spittle-likes em').text(parseInt($spittle.find('.spittle-likes em').text())+1);
+				$this.buttonMarkup({theme: 'b'});
+				$spittle.find('.spittle-like em').text(parseInt($spittle.find('.spittle-like em').text())+1);
 			} else {
 				alert(response.message);
+				//$spittle.find('.spittle-like, .spittle-dislike').removeClass('ui-disabled');
 			}
 		});
 	};
@@ -113,31 +116,23 @@ $(function() {
 	$('.spittle-delete').click(deleteClick);
 	
 	var page = 1;
+	var pageSize = 20;
 	var $spittleList = $('#spittleList');
-	$("#moreSpittles").click(function() {
-		var $this = $(this);
-		$this.prev('span').find('.ui-btn-text').text('加载中...');
-		$this.button('disable');
-		$.isst.api.getSpittles(<c:out value="${spittles[0].id}" />, ++page, 20, function(spittles) {
-			if (spittles.length == 0) {
-				$this.prev('span').find('.ui-btn-text').text('没有更多了');
-				return ;
-			}
-			for (var i=0; i<spittles.length; i++) {
+	
+	var renderSpittles = function(spittles) {
+		for (var i=0; i<spittles.length; i++) {
 				var spittle = spittles[i];
 				var $li = $('<li class="spittle" data-spittleId="'+spittle.id+'">' +
-	        '<h2>'+ spittle.nickname+'</h2>' +
-	        '<p>'+spittle.content+'</p>' +
-	        '<span class="ui-li-count spittle-likes" style="right:70px;">赞  <em>'+spittle.likes+'</em></span>' +
-	        '<span class="ui-li-count spittle-dislikes">踩  <em>'+spittle.dislikes+'</em></span>' +
-	        '<p class="ui-li-aside">'+new Date(spittle.postDate).format("MM-dd hh:mm:ss")+'</p>' +
-	        '<div data-role="controlgroup" data-type="horizontal" style="margin-top:2em;" class="controlgrop">' +
-	        	'<input type="button" class="spittle-like" value="赞" />' +
-	        	'<input type="button" class="spittle-dislike" value="踩" />' +
-	        '</div>' +
-	    '</li>');
+       '<h2>'+ spittle.nickname+'</h2>' +
+        '<p class="spittle-content">'+spittle.content+'</p>' +
+        '<p class="spittle-post-time">'+new Date(spittle.postDate).format("MM-dd hh:mm:ss")+'</p>' +
+        '<div class="spittle-control">' +
+        	'<a href="javascript:;" data-role="button" data-mini="true" data-inline="true" class="spittle-like">赞&nbsp;<em>'+spittle.likes+'</em></a>' +
+        	'<a href="javascript:;" data-role="button" data-mini="true" data-inline="true" class="spittle-dislike">踩&nbsp;<em>'+spittle.dislikes+'</em></a>' +
+        '</div>' +
+    '</li>');
 				if (spittle.isLiked == 1 || spittle.isDisliked == 1) {
-					$li.find('.spittle-like, .spittle-dislike').attr('disabled', 'disabled');
+					$li.find('.spittle-like, .spittle-dislike').addClass('ui-disabled');
 				}
 				
 				if (spittle.isLiked == 1) {
@@ -151,26 +146,46 @@ $(function() {
 				$spittleList.append($li);
 				$li.find('.spittle-dislike').click(dislikeClick);
 				$li.find('.spittle-like').click(likeClick);
+				$li.find('.spittle-control a').button();
 				
 				if ($.isst.userId == 1) {
 					$li.append('<div class="spittle-delete-area"><input type="button" value="删除" data-inline="true" data-mini="true" class="spittle-delete" data-icon="delete" /></div>');
 					$li.find('.spittle-delete').click(deleteClick);
 					$li.find('h2').prepend(spittle.id + '.');
+					$li.find('.spittle-delete').button();
 				}
+				$spittleList.listview("refresh");
+			}
+	};
+	
+	$("#moreSpittles").click(function() {
+		var $this = $(this);
+		$this.prev('span').find('.ui-btn-text').text('加载中...');
+		$this.button('disable');
+		$.isst.api.getSpittles(<c:out value="${spittles[0].id}" />, ++page, pageSize, function(spittles) {
+			if (spittles.length == 0) {
+				$this.prev('span').find('.ui-btn-text').text('没有更多了');
+				return ;
 			}
 			
-			$spittleList.listview("refresh");
-			$spittleList.find("input[type='button']").button();
-			$spittleList.find('.controlgrop').controlgroup();
+			renderSpittles(spittles);
+			
 			$this.prev('span').find('.ui-btn-text').text('更多');
 			$this.button('enable');
 		});
 	});
 	
 	$("#refreshSpittles").click(function() {
-		$(this).prev('span').find('.ui-btn-text').text("刷新中...");
-		$(this).button('disable');
-		window.location.href="<%=basePath%>party/spittles.html";
+		var $this = $(this);
+		$this.prev('span').find('.ui-btn-text').text("刷新中...");
+		$this.button('disable');
+		page = 1;
+		$.isst.api.getSpittles(0, page, pageSize, function(spittles) {
+			$spittleList.html('');
+			renderSpittles(spittles);
+			$this.prev('span').find('.ui-btn-text').text("刷新");
+			$this.button('enable');
+		});
 	});
 });
 </script>

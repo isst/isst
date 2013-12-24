@@ -38,31 +38,45 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script type="text/javascript" src="resources/js/ajax-pushlet-client.js"></script>
 <script type="text/javascript" src="resources/js/party-screen.js"></script>
 <script type="text/javascript">
-var spittles = [];
-var $ul = $("#spittleList");
-var doing = false;
-var timer = null;
 
-function deQuene() {
-	if (!doing && spittles.length>0) {
-		doing = true;
-		var spittle = spittles.shift();
-		var $templ = $('#'+spittle.spittleId);
-		if ($templ.length == 0) {
-			$templ = newTemplate(spittle);
-		}
-    	$ul.prepend($templ.hide());
-    	var liHeight = $templ.outerHeight(true);
-    	$ul.animate({marginTop : liHeight +"px"}, 1000, function(){
-    		$ul.css({marginTop:0});
-    		$templ.fadeIn(1000);
-    		doing = false;
-    		timer = setTimeout(deQuene, 5000);
-		});
-    } else if (spittles.length == 0) {
-    	timer = null;
-    }
-}
+var PushingSpittle = function($ul) {
+	var spittles = [];
+	var doing = false;
+	var timer = null;
+	var self = this;
+	
+	this.popup = function() {
+		if (!doing && spittles.length>0) {
+			doing = true;
+			var spittle = spittles.shift();
+			var $templ = $('#'+spittle.spittleId);
+			if ($templ.length == 0) {
+				$templ = newTemplate(spittle);
+			}
+	    	$ul.prepend($templ.hide());
+	    	var liHeight = $templ.outerHeight(true);
+	    	$ul.animate({marginTop : liHeight +"px"}, 1000, function(){
+	    		$ul.css({marginTop:0});
+	    		$templ.fadeIn(1000);
+	    		doing = false;
+	    		timer = setTimeout(function() {
+	    			self.popup();
+	    		}, 5000);
+			});
+	    } else if (spittles.length == 0) {
+	    	timer = null;
+	    }
+	};
+	
+	this.push = function(spittle) {
+		spittles.push(spittle);
+		if (!doing && !timer) {
+	    	this.popup();
+	    }
+	};
+};
+
+var ps = new PushingSpittle($("#spittleList"));
 
 PL.webRoot = "<%=basePath%>";
 PL._init();
@@ -75,10 +89,7 @@ function onData(event) {
 			for (var key in spittle) {
 				spittle[key] = decodeURIComponent(spittle[key]);
 			}
-	    	spittles.push(spittle);
-	    	if (!doing && !timer) {
-	    		deQuene();
-	    	}
+	    	ps.push(spittle);
 	    }
 	}
 }
