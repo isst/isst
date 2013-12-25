@@ -94,6 +94,7 @@ public class SpittleDao {
                 if (user != null) {
                     ls.setUserName(user.getName());
                     ls.setNickname(user.getNickname());
+                    ls.setFullname(user.getFullname());
                 }
                 return ls;
             }
@@ -192,9 +193,9 @@ public class SpittleDao {
         if (order.equals("post_time")) {
             sql.append(" ORDER BY s.post_time DESC");
         } else if (order.equals("likes")) {
-            sql.append(" ORDER BY s.likes DESC");
+            sql.append(" ORDER BY s.likes DESC, s.dislikes ASC");
         } else if (order.equals("dislikes")) {
-            sql.append(" ORDER BY s.dislikes DESC");
+            sql.append(" ORDER BY s.dislikes DESC, s.likes DESC");
         }
         
         int offset = page == 0 ? 0 : ((page - 1) * pageSize);

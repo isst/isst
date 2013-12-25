@@ -48,18 +48,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <div id="winSpittle"></div>
 
+<div id="winnerList">
+</div>
+
 <script type="text/javascript" src="resources/js/jquery-2.0.3.min.js"></script>
 <script type="text/javascript" src="resources/js/jquery.easing.1.3.js"></script>
 <script type="text/javascript" src="resources/js/party-screen.js"></script>
 <script type="text/javascript">
 
-var Scrolling = function($ul, offsetTopIndexes) {
+var Scrolling = function($ul) {
 	var speed = 0;
 	var scrollIndex = 1;
 	var timer = null;
 	var scrollMaxSpeed;
+	
+	var offsetTopIndexes = [];
+	var $lists = [];
+	
 	var isEnd = false;
 	var endScrollingNum = 5;
+	var endCallback = null;
 	
 	var ulHeight = 0;
 	var liCount = 0;
@@ -83,7 +91,7 @@ var Scrolling = function($ul, offsetTopIndexes) {
 	var doScrolling = function(easingString, toTop) {
 		var curOffsetTop = 0;
 		$ul.animate({top: (0 - ulHeight) + "px"}, {
-			duration: liCount * 30,
+			duration: liCount * 20,
 			easing: easingString,
 			step: function(curTop, fx) {
 				if (isEnd) {
@@ -93,7 +101,8 @@ var Scrolling = function($ul, offsetTopIndexes) {
 						duration: endScrollingNum*400,
 						easing: "easeOutCirc",
 						complete: function() {
-							console.log(info);
+							isEnd = false;
+							endCallback && endCallback.call($lists[info.endIndex], info);
 						}
 					});
 				}
@@ -109,6 +118,19 @@ var Scrolling = function($ul, offsetTopIndexes) {
 	};
 		
 	this.init = function() {
+		var prevOffsetTop = 0;
+		$ul.find("li").each(function(i) {
+			var $li = $(this);
+			$li.attr({
+				"data-offset-top": prevOffsetTop,
+				"data-index": i
+			});
+			
+			$lists[i] = $li;
+			offsetTopIndexes[i] = prevOffsetTop;
+			
+			prevOffsetTop = $li.position().top;
+		});
 		liCount = $ul.find('li').length;
 		ulHeight = $ul.outerHeight(true);
 		$ul.append($ul.html());
@@ -119,34 +141,37 @@ var Scrolling = function($ul, offsetTopIndexes) {
 	};
 	
 	this.stop = function(callback) {
+		endCallback = callback;
 		isEnd = true;
 	};
 };
 	
 $(function() {
 	var $ul = $("#spittleList");
+	var $winnerList = $("#winnerList");
 	var $overlay = $('#overlay');
 	var prizeType = 0;
 	var spittleId = 0;
-	var offsetTopIndexes = [];
-	var sl = null;
+	var userName;
+	var fullName;
+	var sl = new Scrolling($ul);
 	$overlay.css('opacity', 0.75);
 	
 	$.getJSON("party/admin/getLotterySpittles.json", function(spittles) {
 		var offsetTop = 0;
 		var index = 0;
+		//for (var j=0; j<250; j++) {
 		for (var i=0; i<spittles.length; i++) {
-				var $li = newTemplate(spittles[i]);
-				$ul.append($li);
-				offsetTopIndexes[index] = offsetTop;
-				$li.attr({
-					"data-offset-top": offsetTop,
-					"data-index": index
-				});
-				offsetTop += $li.outerHeight(true);
-				index++;
+			var spittle = spittles[i];
+			var $li = newTemplate(spittle);
+			$li.attr({
+				'data-user-id': spittle.userId,
+				'data-fullname': spittle.fullname
+			});
+			$ul.append($li);
+			index++;
 		}
-		sl = new Scrolling($ul, offsetTopIndexes);
+		//}
 		sl.init();
 	});
 	
@@ -160,13 +185,12 @@ $(function() {
 	
 	$('#stop').click(function() {
 		if (sl) {
-			sl.stop(function() {
+			sl.stop(function(info) {
 				$(this).hide();
 				$('.prize-start').removeClass("prize-start");
 				$overlay.show();
 				popWinner($ul.find("li:first"));
 			});
-			sl = null;
 		}
 	});
 	
@@ -176,6 +200,8 @@ $(function() {
 	
 	function popWinner($li) {
 		spittleId = $li.attr("data-id");
+		userName = $li.attr('data-name');
+		fullName = $li.attr('data-fullname');
 		$winner.find("#winnerUserName").text($li.attr("data-name"));
 		$winner.find("#winnerPrizeType").text($("#prize"+prizeType).text());
 		
@@ -187,10 +213,10 @@ $(function() {
 		var toHeight = $winSpittle.outerHeight(true);
 		var toLeft = parseInt($(window).scrollLeft() + ( $(window).width() - toWidth ) * 0.5, 10);
 		var toTop = parseInt($(window).scrollTop() + ( $(window).height() - toHeight ) * 0.45, 10);
-		var offset = $li.offset();
+		var offset = $(".spittle-wrapper").offset();
 		$winSpittle.css({
 			left: offset.left + 'px',
-			top: offset.top + 'px'
+			top: (offset.top+10) + 'px'
 		});
 		$winSpittle.show();
 		
@@ -207,10 +233,19 @@ $(function() {
 	};
 	
 	$('#prize-confirm').click(function() {
+		if (spittleId == 0) {
+			return false;
+		}
+		
 		$.post("party/admin/winPrize", {spittleId: spittleId, prizeType: prizeType}, function(response) {
 			if (response.code == 0) {
 				alert(response.message);
 			} else {
+				spittleId = 0;
+				var $s = $('<div class="spittle-winner"><h4>'+userName+'</h4><p>'+fullName+'</p></div>');
+				$s.hide();
+				$winnerList.append($s);
+				$s.fadeIn('slow');
 				close();
 			}
 		});
