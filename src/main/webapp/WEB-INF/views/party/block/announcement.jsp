@@ -11,7 +11,6 @@ p { text-indent: 2em;}
 	  <li class="active"><a href="#app">App使用</a></li>
 	  <li><a href="#lotteries">现场抽奖</a></li>
 	  <li><a href="#votes">节目投票</a></li>
-	  <li><a href="#sponsors">赞助商</a></li>
 	</ul>
 	<div class="tab-content">
 		<div class="tab-pane active" id="app">
@@ -32,6 +31,10 @@ p { text-indent: 2em;}
 					<dt>吐槽内容</dt>
 					<dd>字数介于5~140个字符。请各位同学文明吐槽，发现不良信息将追究到人</dd>
 				</dl>
+				<dl>
+					<dt>点赞/点踩</dt>
+					<dd>每位同学可以对任意一条评论最多点一次赞/踩</dd>
+				</dl>
 			</div>
 		</div>
 		
@@ -50,29 +53,16 @@ p { text-indent: 2em;}
 			<div>
 				<h4>抽奖规则</h4>
 				<ul>
-					<li>取每位同学发布评论中被点赞次数最多的进入抽奖池中</li>
-					<li>抽奖池中每个条评论的权值公式：<p class="text-center"><img src="resources/images/lottery-rule.jpg" /><p>权值越大，抽中的概率越大</li>
+					<li>取每位同学所发布评论中被点赞次数最多的进入抽奖池</li>
+					<li>抽奖池中每个条评论的权值公式：<p class="text-center"><img src="resources/images/lottery-rule1.jpg" /><p>权值越大，抽中的概率越大</li>
 					<li>已中奖者的评论不能再进入抽奖池</li>
 					<li>点赞狂人奖、点踩狂人奖、不明觉厉评论奖、累觉不爱评论奖不占抽奖名额</li>
 					<li>循环滚动抽奖池中的评论，被选中的评论的发布者即为中奖者</li>
 				</ul>
 			</div>
-		</div>
-		
-		<div class="tab-pane" id="votes">
-			<div>每个学生及嘉宾均可自由选择自己感兴趣的节目并为其投下自己珍贵的一票，每个节目开始时即开放该节目的投票通道，该投票通道将一直持续至晚会结束</div>
+			
 			<div>
-				<h4>投票规则</h4>
-				<ul>
-					<li>单人的投票上限为5票，且不可对单一节目重复投票</li>
-					<li>学生每一票的权重值为1，嘉宾（含老师及赞助商嘉宾）每一票的权重值为5</li>
-					<li>最后将不同节目的总得分（总得分=学生投票数量*1+嘉宾投票数量*5）按高到低的顺序排列选出晚会获奖节目名单</li>
-				</ul>
-			</div>
-		</div>
-		
-		<div class="tab-pane" id="sponsors">
-			<h4>特别鸣谢：</h4>
+				<h4>特别鸣谢：</h4>
 			<div class="panel-group" id="sponsorsAccordion">
 				<div class="panel panel-default">
 					<div class="panel-heading">
@@ -121,6 +111,19 @@ p { text-indent: 2em;}
 						</div>
 					</div>
 				</div>
+			</div>
+			</div>
+		</div>
+		
+		<div class="tab-pane" id="votes">
+			<div>每个学生及嘉宾均可自由选择自己感兴趣的节目并为其投下自己珍贵的一票，每个节目开始时即开放该节目的投票通道，该投票通道将一直持续至晚会结束</div>
+			<div>
+				<h4>投票规则</h4>
+				<ul>
+					<li>单人的投票上限为5票，且不可对单一节目重复投票</li>
+					<li>学生每一票的权重值为1，嘉宾（含老师及赞助商嘉宾）每一票的权重值为5</li>
+					<li>最后将不同节目的总得分（总得分=学生投票数量*1+嘉宾投票数量*5）按高到低的顺序排列选出晚会获奖节目名单</li>
+				</ul>
 			</div>
 		</div>
 	</div>
