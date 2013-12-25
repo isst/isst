@@ -63,7 +63,6 @@ var Scrolling = function($ul) {
 	var scrollMaxSpeed;
 	
 	var offsetTopIndexes = [];
-	var $lists = [];
 	
 	var isEnd = false;
 	var endScrollingNum = 5;
@@ -102,7 +101,7 @@ var Scrolling = function($ul) {
 						easing: "easeOutCirc",
 						complete: function() {
 							isEnd = false;
-							endCallback && endCallback.call($lists[info.endIndex], info);
+							endCallback && endCallback.call(null, info);
 						}
 					});
 				}
@@ -126,7 +125,6 @@ var Scrolling = function($ul) {
 				"data-index": i
 			});
 			
-			$lists[i] = $li;
 			offsetTopIndexes[i] = offsetTop;
 		});
 		liCount = $ul.find('li').length;
@@ -157,8 +155,6 @@ $(function() {
 	
 	$.getJSON("party/admin/getLotterySpittles.json", function(spittles) {
 		var offsetTop = 0;
-		var index = 0;
-		//for (var j=0; j<250; j++) {
 		for (var i=0; i<spittles.length; i++) {
 			var spittle = spittles[i];
 			var $li = newTemplate(spittle);
@@ -167,9 +163,7 @@ $(function() {
 				'data-fullname': spittle.fullname
 			});
 			$ul.append($li);
-			index++;
 		}
-		//}
 		sl.init();
 	});
 	
@@ -187,7 +181,7 @@ $(function() {
 				$(this).hide();
 				$('.prize-start').removeClass("prize-start");
 				$overlay.show();
-				popWinner($ul.find("li:first"));
+				popWinner($ul.find('li').eq(info.endIndex));
 			});
 		}
 	});
@@ -225,6 +219,7 @@ $(function() {
 	}
 	
 	var close = function() {
+		$('#stop').hide();
 		$winSpittle.hide();
 		$winner.hide();
 		$overlay.hide();
