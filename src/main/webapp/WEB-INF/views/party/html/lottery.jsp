@@ -118,18 +118,16 @@ var Scrolling = function($ul) {
 	};
 		
 	this.init = function() {
-		var prevOffsetTop = 0;
 		$ul.find("li").each(function(i) {
 			var $li = $(this);
+			var offsetTop = $li.position().top;
 			$li.attr({
-				"data-offset-top": prevOffsetTop,
+				"data-offset-top": offsetTop,
 				"data-index": i
 			});
 			
 			$lists[i] = $li;
-			offsetTopIndexes[i] = prevOffsetTop;
-			
-			prevOffsetTop = $li.position().top;
+			offsetTopIndexes[i] = offsetTop;
 		});
 		liCount = $ul.find('li').length;
 		ulHeight = $ul.outerHeight(true);
