@@ -51,6 +51,7 @@ public class PartyApiController extends BaseController {
         boolean isUpdateNickname = false;
         String path = null;
         String method = null;
+        int requestUserId = 0;
         for (Map.Entry<String, String[]> entry : rawData.entrySet()) {
             String key = entry.getKey();
             if (key.equals("_method")) {
@@ -58,6 +59,9 @@ public class PartyApiController extends BaseController {
             } else if (key.equals("_path")) {
                 path = entry.getValue()[0];
             } else {
+                if (key.equals("userId")) {
+                    requestUserId = Integer.valueOf(entry.getValue()[0]).intValue();
+                }
                 data.put(key, entry.getValue()[0]);
             }
         }
@@ -68,6 +72,10 @@ public class PartyApiController extends BaseController {
             return new JSONObject(new ResultHolder("未登录")).toString();
         } else if ("/users/{userId}".equals(path) && "PUT".equals(method)) {
             isUpdateNickname = true;
+        }
+        
+        if (requestUserId > 0 && user.getId() != 1 && requestUserId != user.getId()) {
+            return new JSONObject(new ResultHolder("非法访问")).toString();
         }
         
         List<Map.Entry<String, String>> list = new ArrayList<Map.Entry<String, String>>(data.entrySet());

@@ -111,7 +111,7 @@ var Scrolling = function($ul, offsetTopIndexes) {
 	this.init = function() {
 		liCount = $ul.find('li').length;
 		ulHeight = $ul.outerHeight(true);
-		//$ul.append($ul.html());
+		$ul.append($ul.html());
 	};
 	
 	this.start = function() {
@@ -135,8 +135,7 @@ $(function() {
 	$.getJSON("party/admin/getLotterySpittles.json", function(spittles) {
 		var offsetTop = 0;
 		var index = 0;
-		for (var j = 0; j < 2000; j++) {
-			for (var i=0; i<spittles.length; i++) {
+		for (var i=0; i<spittles.length; i++) {
 				var $li = newTemplate(spittles[i]);
 				$ul.append($li);
 				offsetTopIndexes[index] = offsetTop;
@@ -146,7 +145,6 @@ $(function() {
 				});
 				offsetTop += $li.outerHeight(true);
 				index++;
-			}
 		}
 		sl = new Scrolling($ul, offsetTopIndexes);
 		sl.init();

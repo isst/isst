@@ -22,6 +22,7 @@ public class SpittleServiceImpl implements SpittleService {
     private UserDao userDao;
 
     private static Map<Integer, Long> userLastPostTimes = new HashMap<Integer, Long>();
+    private static Map<Integer, String> userLastPostContents = new HashMap<Integer, String>();
     
     @Override
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
@@ -44,6 +45,19 @@ public class SpittleServiceImpl implements SpittleService {
             return new ResultHolder("发布过于频繁");
         }
         
+        String lastContent = userLastPostContents.get(userId);
+        if (null != lastContent) {
+            if (lastContent.length() == content.length()) {
+                if (lastContent.equals(content)) {
+                    return new ResultHolder("已发布过相同的内容");
+                }
+            } else {
+                if (lastContent.contains(content) || content.contains(lastContent)) {
+                    return new ResultHolder("已发布过相似的内容");
+                }
+            }
+        }
+        
         Spittle spittle = new Spittle();
         spittle.setUserId(userId);
         spittle.setContent(content);
@@ -53,6 +67,7 @@ public class SpittleServiceImpl implements SpittleService {
         int id = spittleDao.create(spittle);
         if (id > 0) {
             userLastPostTimes.put(userId, currentTimeMillis);
+            userLastPostContents.put(userId, content);
             return new ResultHolder(id);
         } else
             return new ResultHolder(0);
