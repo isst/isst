@@ -34,9 +34,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</div>
 </div>
 
-<script type="text/javascript" src="resources/js/jquery-2.0.3.min.js"></script>
-<script type="text/javascript" src="resources/js/ajax-pushlet-client.js"></script>
-<script type="text/javascript" src="resources/js/party-screen.js"></script>
+<script type="text/javascript" src="<%=basePath%>resources/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>resources/js/ajax-pushlet-client.js"></script>
+<script type="text/javascript" src="<%=basePath%>resources/js/party-screen.js"></script>
 <script type="text/javascript">
 
 var PushingSpittle = function($ul) {
@@ -85,7 +85,7 @@ function onData(event) {
 	var spittle = event.get("spittle");
 	if (spittle) {
 		spittle = $.parseJSON(spittle);
-	    if (spittle) {
+	    if (spittle) {console.log(spittle);
 			for (var key in spittle) {
 				spittle[key] = decodeURIComponent(spittle[key]);
 			}

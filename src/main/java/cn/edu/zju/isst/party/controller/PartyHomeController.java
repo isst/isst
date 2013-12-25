@@ -15,4 +15,9 @@ public class PartyHomeController extends BaseController {
         }
         return "redirect:spittles.html";
     }
+    
+    @RequestMapping("/party-announcement.html")
+    public String announcement() {
+        return "announcement.page";
+    }
 }

@@ -162,6 +162,7 @@ $(function() {
 		$.isst.api.${isLike?'getLikeSpittles':'getDislikeSpittles'}(function(spittles) {
 			$spittleList.html('');
 			renderSpittles(spittles);
+		}, function() {
 			$this.prev('span').find('.ui-btn-text').text("刷新");
 			$this.button('enable');
 		});

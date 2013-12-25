@@ -9,11 +9,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html lang="zh-cn">
 <head>
 <tiles:insertAttribute name="head" />
+<tiles:insertAttribute name="head-script" />
 </head>
 <body>
 <div id="page" data-role="page">
 	<tiles:insertAttribute name="script" />
-	<div data-role="header" data-theme="c" data-position="fixed">
+	<div data-role="header" data-theme="c" data-position="fixed" data-tap-toggle="false">
 		<a class="ui-btn-left" href="<%=basePath%>party/nickname.html" data-role="button" data-rel="dialog" data-icon="edit" id="nickname">${user.nickname}</a>
 		<h1>编译青春，驱动未来</h1>
 		<a class="ui-btn-right" href="<%=basePath%>party/logout" data-role="button" data-icon="arrow-r" data-iconpos="right" id="logout" data-ajax="false">退出</a>
@@ -22,7 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	    <tiles:insertAttribute name="content" />
 	    <div id="toTop"><input type="button" value="Top" data-icon="arrow-u" data-mini="true" /></div>
 	</div>
-  	<div data-role="footer" data-id="page-footer" data-position="fixed" data-theme="d">
+  	<div data-role="footer" data-id="page-footer" data-position="fixed" data-theme="d" data-tap-toggle="false">
   		<c:if test="${activeNav=='spittles'}">
 
 <style type="text/css">
@@ -36,7 +37,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	margin-left:1%;
 	vertical-align : middle;
 }
-@media all and (max-width:480px) {
+@media all and (max-width:900px) {
     .spittle-form #spittleContentBlock {
         width   : 79%;
     }

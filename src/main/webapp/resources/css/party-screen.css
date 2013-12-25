@@ -6,16 +6,19 @@ ul, li { list-style:none; margin:0; padding: 0; }
 .top { height: 175px; background: url('../images/screen/slogan.png') no-repeat center center;}
 .top .logo { width: 213px; height: 174px; background: url('../images/screen/logo.png') no-repeat center center;}
 
-.screen { position: relative; top: -25px;}
+.screen { position: relative; top: 0;}
 .spittle-bg { background: url('../images/screen/spittle-bg.png') no-repeat center center; width: 900px; height: 573px; overflow: hidden; margin: 0 auto; padding: 10px;}
 .spittle-wrapper { width: 884px; height:553px; margin: 10px auto; overflow: hidden;}
 
+.spittle-list { position: relative;}
 .spittle-list li { margin-bottom: 7px;}
-.spittle { color: #fff;  border: 1px solid #fff45f; padding: 15px; background-color: #bf2a20;}
+.spittle { position: relative; color: #fff;  border: 1px solid #fff45f; padding: 15px; background-color: #bf2a20;}
 .spittle .hd { overflow: auto;}
-.spittle .hd h3 { font-size: 36px; padding: 0; margin: 5px 0 10px 0; font-weight: bold; color: #fff455; float: left;}
-.spittle .hd p { float: right;}
-.spittle .cnt { font-size: 30px; font-weight: bold; word-break: break-all; word-wrap: break-word; line-height: 1.5em; clear: both; margin: 0 10px;}
+.spittle .hd h3 { font-size: 46px; padding: 0; margin: 5px 0 10px 0; font-weight: bold; color: #fff455; float: left;}
+.spittle .info { position: absolute; right: 10px; top: 10px; width: 200px;}
+.spittle .info .likes, .spittle .info .dislikes { font-size: 30px; }
+.spittle .info .likes { margin-right: 20px;}
+.spittle .cnt { font-size: 40px; font-weight: bold; word-break: break-all; word-wrap: break-word; line-height: 1.5em; clear: both; margin: 0 10px;}
 
 .controls { position: absolute; left: 0; top: 50px; width: 120px; background-position: right center; background-repeat: no-repeat; padding: 20px 7px 20px 0; text-align: center; }
 .controls .bg{ width:100%; height:100%; background:#FFFFFF; opacity:0.3; -moz-border-radius:5px 5px 0px 0px; -webkit-border-radius:5px 5px 0px 0px; filter:alpha(opacity=30); position:absolute; top:0px; left:0px; z-index: -1;}
@@ -34,4 +37,4 @@ ul, li { list-style:none; margin:0; padding: 0; }
 
 .jqplot-point-label, .jqplot-yaxis-label, .jqplot-xaxis-label, .jqplot-title, .jqplot-axis, .jqplot-target { color: #fff; font-size: 18px; font-weight: bold;}
 .jqplot-point-label { color: #000;}
-#votes { height:580px; width:90%; margin:20px auto 0 auto;}
+#votes { height:580px; width:90%; margin:20px auto 0 auto;}to;}

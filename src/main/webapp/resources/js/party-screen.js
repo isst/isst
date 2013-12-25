@@ -1,4 +1,4 @@
-Date.prototype.format = function(fmt)   {
+Date.prototype.format = function(fmt) {
   var o = {   
     "M+" : this.getMonth()+1, 
     "d+" : this.getDate(),
@@ -17,14 +17,20 @@ Date.prototype.format = function(fmt)   {
 };
 
 function newTemplate(spittle) {
-	var dateString = (new Date(spittle.postTime * 1000)).format("yyyy-MM-dd hh:mm:ss");
+	var dateString = (new Date(spittle.postTime * 1000)).format("MM-dd hh:mm:ss");
 	var template = '<li data-id="'+spittle.spittleId+'" data-name="'+spittle.userName+'">' +
 		'<div class="spittle">' +
 			'<div class="hd">' +
 				'<h3>'+spittle.nickname+'</h3>' +
-				'<p>'+dateString+'</p>' +
 			'</div>' +
 			'<div class="cnt ">'+spittle.content+'</div>' +
+			'<div class="info">'+
+				'<p class="postTime">'+dateString+'</p>' +
+				'<p class="likes-dislikes">' +
+				'<label>赞</label><em class="likes">'+spittle.likes+'</em>' +
+				'<label>踩</label><em class="dislikes">'+spittle.dislikes+'</em>' +
+				'</p>' +
+			'</div>' +
 		'</div>' +
 	'</li>';
     return $(template);

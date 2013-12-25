@@ -158,18 +158,19 @@ $(function() {
 			}
 	};
 	
+	var maxSpittleId = <c:out value="${spittles[0].id}" />;
 	$("#moreSpittles").click(function() {
 		var $this = $(this);
 		$this.prev('span').find('.ui-btn-text').text('加载中...');
 		$this.button('disable');
-		$.isst.api.getSpittles(<c:out value="${spittles[0].id}" />, ++page, pageSize, function(spittles) {
+		$.isst.api.getSpittles(maxSpittleId, ++page, pageSize, function(spittles) {
 			if (spittles.length == 0) {
 				$this.prev('span').find('.ui-btn-text').text('没有更多了');
 				return ;
 			}
 			
 			renderSpittles(spittles);
-			
+		}, function() {
 			$this.prev('span').find('.ui-btn-text').text('更多');
 			$this.button('enable');
 		});
@@ -182,7 +183,11 @@ $(function() {
 		page = 1;
 		$.isst.api.getSpittles(0, page, pageSize, function(spittles) {
 			$spittleList.html('');
+			if (spittles.length > 0) {
+				maxSpittleId = parseInt(spittles[0].id);
+			}
 			renderSpittles(spittles);
+		}, function() {
 			$this.prev('span').find('.ui-btn-text').text("刷新");
 			$this.button('enable');
 		});

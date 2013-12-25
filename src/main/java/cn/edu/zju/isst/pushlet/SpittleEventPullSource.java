@@ -69,7 +69,7 @@ public class SpittleEventPullSource extends EventPullSource implements Serializa
     
     private static String encodeString(String str) {
         try {
-            return URLEncoder.encode(str,"UTF-8");
+            return URLEncoder.encode(str,"UTF-8").replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
             return str;
         }

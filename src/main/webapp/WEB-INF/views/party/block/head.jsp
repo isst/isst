@@ -49,66 +49,68 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		$.isst.api = {
 			url: '<%=basePath%>api',
-			get: function(path, data, callback) {
-				$.isst.api._ajax(path, data, callback, 'get');
+			get: function(path, data, callback, complete) {
+				$.isst.api._ajax(path, data, callback, complete, 'get');
 			},
-			post: function(path, data, callback) {
-				$.isst.api._ajax(path, data, callback, 'post');
+			post: function(path, data, callback, complete) {
+				$.isst.api._ajax(path, data, callback, complete, 'post');
 			},
-			put: function(path, data, callback) {
+			put: function(path, data, callback, complete) {
 				data['_method'] = 'PUT';
-				$.isst.api._ajax(path, data, callback, 'post');
+				$.isst.api._ajax(path, data, callback, complete, 'post');
 			},
-			del: function(path, data, callback) {
+			del: function(path, data, callback, complete) {
 				data['_method'] = 'DELETE';
-				$.isst.api._ajax(path, data, callback, 'post');
+				$.isst.api._ajax(path, data, callback, complete, 'post');
 			},
-			_ajax: function(path, data, callback, type) {
+			_ajax: function(path, data, callback, complete, type) {
 				data._path = path;
 				$.ajax({
 					url: $.isst.party.createUrl("api"),
 					data: data || {},
 					type: type,
+					cache: false,
 					dataType: 'json',
 					success: callback,
+					complete: complete || function() {},
 					error: function() {
 						alert("服务器错误");
 					}
 				});
 			},
-			login: function(name, password, callback) {
-				$.isst.api.post('/users/validation', {name: name, password: password}, callback);
+			login: function(name, password, callback, complete) {
+				$.isst.api.post('/users/validation', {name: name, password: password}, callback, complete);
 			},
-			postSpittle: function(content, callback) {
-				$.isst.api.post('/users/{userId}/spittles', {content: content, userId: $.isst.userId}, callback);
+			postSpittle: function(content, callback, complete) {
+				$.isst.api.post('/users/{userId}/spittles', {content: content, userId: $.isst.userId}, callback, complete);
 			},
-			updateNickname: function(nickname, callback) {
-				$.isst.api.put('/users/{userId}', {nickname: nickname, userId: $.isst.userId}, callback);
+			updateNickname: function(nickname, callback, complete) {
+				$.isst.api.put('/users/{userId}', {nickname: nickname, userId: $.isst.userId}, callback, complete);
 			},
-			getShows: function(callback) {
-				$.isst.api.get('/users/{userId}/shows', {userId: $.isst.userId}, callback);
+			getShows: function(callback, complete) {
+				$.isst.api.get('/users/{userId}/shows', {userId: $.isst.userId}, callback, complete);
 			},
-			showVote: function(showId, callback) {
-				$.isst.api.post('/users/{userId}/shows/{showId}/votes', {userId: $.isst.userId, showId: showId}, callback);
+			showVote: function(showId, callback, complete) {
+				$.isst.api.post('/users/{userId}/shows/{showId}/votes', {userId: $.isst.userId, showId: showId}, callback, complete);
 			},
-			like: function(spittleId, callback, isLike) {
+			like: function(spittleId, callback, complete, isLike) {
 				isLike = isLike == undefined ? 1 : isLike;
 				$.isst.api.post('/users/{userId}/spittles/{spittleId}/likes', {userId: $.isst.userId, spittleId: spittleId, isLike: isLike}, callback);
 			},
-			dislike: function(spittleId, callback) {
-				$.isst.api.like(spittleId, callback, 0);
+			dislike: function(spittleId, callback, complete) {
+				$.isst.api.like(spittleId, callback, complete, 0);
 			},
-			getSpittles: function(id, page, pageSize, callback) {
-				$.isst.api.get('/users/{userId}/spittles', {userId: $.isst.userId, id: id, page: page, pageSize: pageSize}, callback);
+			getSpittles: function(id, page, pageSize, callback, complete) {
+				$.isst.api.get('/users/{userId}/spittles', {userId: $.isst.userId, id: id, page: page, pageSize: pageSize}, callback, complete);
 			},
-			getLikeSpittles: function(callback) {
-				$.isst.api.get('/users/{userId}/spittles/likes', {userId: $.isst.userId, isLike: 1}, callback);
+			getLikeSpittles: function(callback, complete) {
+				$.isst.api.get('/users/{userId}/spittles/likes', {userId: $.isst.userId, isLike: 1}, callback, complete);
 			},
-			getDislikeSpittles: function(callback) {
-				$.isst.api.get('/users/{userId}/spittles/likes', {userId: $.isst.userId, isLike: 0}, callback);
+			getDislikeSpittles: function(callback, complete) {
+				$.isst.api.get('/users/{userId}/spittles/likes', {userId: $.isst.userId, isLike: 0}, callback, complete);
 			},
-			deleteSpittle: function(spittleId, callback) {
-				$.isst.api.del('/users/{userId}/spittles/{spittleId}', {userId: $.isst.userId, spittleId: spittleId}, callback);
+			deleteSpittle: function(spittleId, callback, complete) {
+				$.isst.api.del('/users/{userId}/spittles/{spittleId}', {userId: $.isst.userId, spittleId: spittleId}, callback, complete);
 			}
 		};
 		
@@ -129,5 +131,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <style type="text/css">
 	.ui-header .ui-title { white-space: normal; margin: 0.6em 0 0.8em; text-align: center;}
 	.ui-li-heading, .ui-li-desc { white-space: normal; }
-	#toTop {position: fixed; bottom: 150px; right: 30px; width: 70px; cursor: pointer; display: none; z-index:1000;}
+	.content { position: relative;}
+	#toTop {position: fixed; bottom: 130px; right: 20px; width: 70px; cursor: pointer; display: none; z-index:1000;}
 </style>

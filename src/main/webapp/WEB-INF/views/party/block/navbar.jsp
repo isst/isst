@@ -11,7 +11,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<a href="<%=basePath%>party/spittles.html" data-ajax="false" data-icon="grid" class="${activeNav == 'spittles' ? 'ui-btn-active ui-state-persist' : ''}">我要吐槽</a>
 		</li>
 		<li><a href="<%=basePath%>party/shows.html" data-ajax="false" class="${activeNav == 'shows' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="check">节目投票</a></li>
-		<li><a href="<%=basePath%>party/spittles.html" data-ajax="false"  class="${activeNav == 'introduction' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="info">晚会说明</a></li>
+		<li><a href="<%=basePath%>party/party-announcement.html" data-ajax="false"  class="${activeNav == 'announcement' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="info">晚会说明</a></li>
 		<c:if test="${user.id==1}">
 			<li><a href="<%=basePath%>party/admin.html" data-ajax="false" class="${activeNav == 'admin' ? 'ui-btn-active ui-state-persist' : ''}" data-icon="gear">系统设置</a></li>
 		</c:if>

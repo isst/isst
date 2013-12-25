@@ -21,9 +21,9 @@ import cn.edu.zju.isst.dao.ShowDao;
 import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.LoggedUser;
+import cn.edu.zju.isst.entity.LotterySpittle;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Show;
-import cn.edu.zju.isst.entity.PushingSpittle;
 import cn.edu.zju.isst.pushlet.SpittleEventPullSource;
 
 @Controller
@@ -95,9 +95,9 @@ public class PartyAdminController extends BaseController {
 
     @RequestMapping("/admin/getLotterySpittles.json")
     public @ResponseBody
-    List<PushingSpittle> getLotterySpittles(@ModelAttribute("user") LoggedUser user) {
+    List<LotterySpittle> getLotterySpittles(@ModelAttribute("user") LoggedUser user) {
         if (user.getId() == 1) {
-            return spittleDao.retrievePushingSpittles();
+            return spittleDao.retrieveLotterySpittles();
         }
         return null;
     }

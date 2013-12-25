@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.edu.zju.isst.config.PartyConfig;
+import cn.edu.zju.isst.entity.LotterySpittle;
 import cn.edu.zju.isst.entity.PushingSpittle;
 import cn.edu.zju.isst.entity.Spittle;
 import cn.edu.zju.isst.entity.User;
@@ -73,6 +74,32 @@ public class SpittleDao {
         return spittles.get(0);
     }
     
+    public List<LotterySpittle> retrieveLotterySpittles() {
+        String sql = "SELECT s.*, COUNT(s.id) spittle_count, SUM(likes) spittle_likes FROM (SELECT * FROM  yd_spittle ORDER BY likes DESC) s WHERE user_id NOT IN (SELECT DISTINCT user_id FROM yd_spittle_lottery) GROUP BY user_id;";
+        return jdbcTemplate.query(sql, new RowMapper<LotterySpittle>() {
+            @Override
+            public LotterySpittle mapRow(ResultSet rs, int rowNum) throws SQLException {
+                LotterySpittle ls = new LotterySpittle();
+                ls.setSpittleId(rs.getInt("id"));
+                ls.setContent(rs.getString("content"));
+                ls.setPostTime(rs.getLong("post_time"));
+                ls.setUserId(rs.getInt("user_id"));
+                ls.setLikes(rs.getInt("likes"));
+                ls.setDislikes(rs.getInt("dislikes"));
+                int spittleCount = rs.getInt("spittle_count");
+                int spittleLikes = rs.getInt("spittle_likes");
+                int weight = (int) (Math.floor(Math.log(spittleCount+spittleLikes) / Math.log(2)) + 1);
+                ls.setWeight(weight > PartyConfig.LOTTERY_MAX_SPITTLES ? PartyConfig.LOTTERY_MAX_SPITTLES : weight);
+                User user = userDao.getUserById(rs.getInt("user_id"));
+                if (user != null) {
+                    ls.setUserName(user.getName());
+                    ls.setNickname(user.getNickname());
+                }
+                return ls;
+            }
+        });
+    }
+    
     public List<PushingSpittle> retrievePushingSpittles() {
         String sql = "SELECT * FROM yd_spittle";
         return jdbcTemplate.query(sql, getPushingSpittleRowMapper());
@@ -87,6 +114,8 @@ public class SpittleDao {
                 ps.setContent(rs.getString("content"));
                 ps.setPostTime(rs.getLong("post_time"));
                 ps.setUserId(rs.getInt("user_id"));
+                ps.setLikes(rs.getInt("likes"));
+                ps.setDislikes(rs.getInt("dislikes"));
                 User user = userDao.getUserById(rs.getInt("user_id"));
                 if (user != null) {
                     ps.setUserName(user.getName());
