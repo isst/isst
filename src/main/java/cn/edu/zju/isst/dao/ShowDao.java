@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.edu.zju.isst.config.PartyConfig;
 import cn.edu.zju.isst.entity.Show;
+import cn.edu.zju.isst.entity.User;
 import cn.edu.zju.isst.entity.UserShowVote;
 
 @Repository
@@ -29,7 +30,9 @@ public class ShowDao {
     private JdbcTemplate jdbcTemplate;
     
     private static ShowDao instance;
-
+    @Autowired
+    private UserDao userDao;
+    
     public ShowDao() {
         instance = this;
     }
@@ -62,8 +65,8 @@ public class ShowDao {
     }
     
     public List<UserShowVote> retrieveForUser(int year, int userId) {
-        String sql = "SELECT s.*, sv.post_time vote_time FROM yd_show s LEFT JOIN yd_show_vote sv ON s.id=sv.show_id AND sv.user_id=? WHERE s.year=? ORDER BY s.sort_num";
-        return jdbcTemplate.query(sql, new Object[] {userId, year}, new RowMapper<UserShowVote>() {
+        String sql = "SELECT s.*, sv.post_time vote_time FROM yd_show s LEFT JOIN yd_show_vote sv ON s.id=sv.show_id AND sv.user_id=? ORDER BY s.sort_num";
+        return jdbcTemplate.query(sql, new Object[] {userId}, new RowMapper<UserShowVote>() {
             @Override
             public UserShowVote mapRow(ResultSet rs, int rowNum) throws SQLException {
                 UserShowVote show = new UserShowVote();
@@ -121,8 +124,11 @@ public class ShowDao {
             return 1;
         }
         
-        String sql = "INSERT INTO yd_show_vote (user_id, show_id, post_time) VALUES (?, ?, ?)";
-        jdbcTemplate.update(sql, new Object[] {userId, showId, System.currentTimeMillis()/1000});
+        User user = userDao.getUserById(userId);
+        if (user != null) {
+            String sql = "INSERT INTO yd_show_vote (user_id, show_id, weight, post_time) VALUES (?, ?, ?, ?)";
+            jdbcTemplate.update(sql, new Object[] {userId, showId, user.getType() == 1 ? PartyConfig.TEACHER_VOTE_WEIGHT : PartyConfig.STUDENT_VOTE_WEIGHT, System.currentTimeMillis()/1000});
+        }
         
         return 0;
     }
@@ -142,7 +148,7 @@ public class ShowDao {
     }
     
     public Map<Integer, Integer> statisticalVote() {
-        String sql = "SELECT show_id, COUNT(id) as votes FROM yd_show_vote GROUP BY show_id";
+        String sql = "SELECT show_id, SUM(weight) as votes FROM yd_show_vote GROUP BY show_id";
         return jdbcTemplate.query(sql, new ResultSetExtractor<Map<Integer, Integer>>() {
             @Override
             public Map<Integer, Integer> extractData(ResultSet rs) throws SQLException {
