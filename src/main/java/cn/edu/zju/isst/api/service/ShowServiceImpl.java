@@ -59,7 +59,7 @@ public class ShowServiceImpl implements ShowService {
         int result = showDao.vote(userId, showId);
         if (result == 0) {
             userVotes.put(userId, ++votes);
-            ShowVoteEventPullSource.startVoting();
+            //ShowVoteEventPullSource.startVoting();
             return new ResultHolder();
         } else if (result == 1) {
             return new ResultHolder("已投过票");

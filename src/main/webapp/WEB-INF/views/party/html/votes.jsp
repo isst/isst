@@ -134,9 +134,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	pushVoteData(<c:out value="${voteData}" escapeXml="false" />);
 	doReplot();
 	
-	PL.webRoot = "<%=basePath%>";
-	PL._init();
-	PL.joinListen("/party/votes");
+	//PL.webRoot = "<%=basePath%>";
+	//PL._init();
+	//PL.joinListen("/party/votes");
 	
 	function onData(event) {
 		var votes = event.get("votes");
