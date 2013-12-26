@@ -359,8 +359,8 @@ $(function() {
 	
 	$.getJSON("party/admin/getLotterySpittles.json", function(spittles) {
 		var offsetTop = 0;
-		$("#spittleCount").text(spittles.length*20);
-		for (var j=0; j<20; j++) {
+		$("#spittleCount").text(spittles.length);
+
 		for (var i=0; i<spittles.length; i++) {
 			var spittle = spittles[i];
 			var $li = newTemplate(spittle);
@@ -370,7 +370,7 @@ $(function() {
 				'data-weight': spittle.weight+j
 			});
 			$ul.append($li);
-		}}
+		}
 		sl.init();
 		$overlay.hide().html("");
 	});
