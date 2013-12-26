@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html lang="zh-cn">
 <head>
 <base href="<%=basePath%>">
-<title>点赞狂人 | 点踩狂人 统计</title>
+<title>点赞狂人 | 点踩狂人 排行榜</title>
 <meta http-equiv="pragma" content="no-cache">
 <meta http-equiv="cache-control" content="no-cache">
 <meta http-equiv="expires" content="0">    
@@ -25,7 +25,40 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>
 
 <div class="screen">
-	<div id="votes"></div>
+	<div id="crazy" class="crazy-bg">
+		<ul class="crazy-list">
+			<li class="crazy-heading">点赞狂人排行榜</li>
+		<c:forEach var="crazyUser" items="${likeCrazyUsers}" varStatus="status">
+			<li class="crazy-user ${status.index==0?'first':''}">
+				<div class="rank">
+					<em>${status.index+1}</em>
+					<strong>${crazyUser.count}</strong>
+				</div>
+				<div class="user">
+					<label>${crazyUser.name}</label>
+					<span>${crazyUser.fullname}</span>
+				</div>
+			</li>
+		</c:forEach>
+		</ul>
+		
+		<ul class="crazy-list last">
+			<li class="crazy-heading">点踩狂人排行榜</li>
+		<c:forEach var="crazyUser" items="${dislikeCrazyUsers}" varStatus="status">
+			<li class="crazy-user ${status.index==0?'first':''}">
+				<div class="rank">
+					<em>${status.index+1}</em>
+					<strong>${crazyUser.count}</strong>
+				</div>
+				<div class="user">
+					<label>${crazyUser.name}</label>
+					<span>${crazyUser.fullname}</span>
+				</div>
+			</li>
+		</c:forEach>
+		</ul>
+	</div>
+	
 	
 	<div class="controls hide" id="controls">
 		<a href="<%=basePath%>party/screen.html">评论</a>
@@ -36,5 +69,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>
 
 <script type="text/javascript" src="resources/js/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="<%=basePath%>resources/js/party-screen.js"></script>
 </body>
 </html>

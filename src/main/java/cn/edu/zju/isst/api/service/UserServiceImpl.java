@@ -31,7 +31,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultHolder updateNickname(int userId, String nickname) {
+        if (null == nickname || nickname.equals("")) {
+            return new ResultHolder("昵称不能为空");
+        }
+        
         nickname = nickname.replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>","");
+        
+        if (nickname.length() > 10) {
+            return new ResultHolder("昵称不能大于10个字符");
+        }
+        
         if (userDao.updateNickname(userId, nickname)) {
             return new ResultHolder(userId);
         } else {

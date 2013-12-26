@@ -48,7 +48,9 @@ public class PartyAdminController extends BaseController {
     @RequestMapping(value = "/crazy.html", method = RequestMethod.GET)
     public String crazy(Model model, @ModelAttribute("user") LoggedUser user) {
         if (user.getId() == 1) {
-            return "crazy.page";
+            model.addAttribute("likeCrazyUsers", spittleDao.getLikeCrazyUser(6));
+            model.addAttribute("dislikeCrazyUsers", spittleDao.getDislikeCrazyUser(6));
+            return "crazy.html";
         }
         return "redirect:index.html";
     }

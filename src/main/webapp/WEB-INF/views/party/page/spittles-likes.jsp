@@ -28,7 +28,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <ul data-role="listview" data-split-theme="d" data-inset="true" data-count-theme="b" id="${isLike?'like':'dislike'}SpittleList">
 	<c:forEach var="spittle" items="${spittles}">
     <li class="spittle" data-spittleId="${spittle.id}">
-       <h2>${user.id==1?spittle.id:''}${user.id==1?'.':''}${spittle.nickname}</h2>
+       <h2>
+       	<c:if test="${user.id==1}">
+       		${spittle.id}.${spittle.userId}.
+       	</c:if>
+       ${spittle.nickname}</h2>
         <p class="spittle-content">${spittle.content}</p>
         <p class="spittle-post-time"><fmt:formatDate pattern="MM-dd HH:mm:ss" value="${spittle.postDate}" /></p>
         <div class="spittle-control">

@@ -88,6 +88,13 @@ public class SpittleServiceImpl implements SpittleService {
 
     @Override
     public ResultHolder like(int userId, int spittleId, int isLike) {
+        if (null ==userDao.getUserById(userId)) {
+            return new ResultHolder("用户不存在");
+        }
+        if (!spittleDao.exist(spittleId)) {
+            return new ResultHolder("评论不存在");
+        }
+        
         if (spittleDao.like(userId, spittleId, isLike)) {
             return new ResultHolder();
         } else {

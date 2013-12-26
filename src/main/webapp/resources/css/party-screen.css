@@ -62,3 +62,20 @@ ul, li { list-style:none; margin:0; padding: 0; }
 #winnerList.window .spittle-winner p { font-size: 28px;}
 
 .lottery-loading { font-size: 50px; color: #fff; text-align: center; margin-top: 25%;}
+
+.crazy-bg { background: url('../images/screen/spittle-bg.png') no-repeat center center; width: 880px; height: 553px; overflow: hidden; margin: 0 auto; padding: 30px 20px;;}
+.crazy-list { float: left; }
+.crazy-list.last { margin-left: 20px;}
+
+.crazy-heading { text-align: center; font-size: 46px; margin-bottom: 30px;}
+.crazy-user {  color: #fff;  border: 1px solid #fff45f; background-color: #bf2a20;}
+.crazy-user { width: 415px; clear: both; padding: 5px; margin-bottom: 20px; height: 40px; line-height: 40px;}
+.crazy-user .rank, .crazy-user .user { float: left;}
+.crazy-user .rank em, 
+.crazy-user .rank strong,
+.crazy-user .user label, .crazy-user .user span { font-size: 38px;  height: 100%; line-height: 100%; border-right: 1px solid #fff45f; padding-right: 10px;}
+.crazy-user .rank strong, .crazy-user .user label, .crazy-user .user span { margin-left: 5px; display: inline-block;}
+.crazy-user .rank strong { width: 95px; }
+.crazy-user .user label, .crazy-user .user span { font-size: 22px;}
+.crazy-user .user label { margin-left: 10px;}
+.crazy-user .user span { border-right: none;}

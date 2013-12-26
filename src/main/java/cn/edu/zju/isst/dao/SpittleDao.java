@@ -20,6 +20,7 @@ import cn.edu.zju.isst.config.PartyConfig;
 import cn.edu.zju.isst.entity.LotterySpittle;
 import cn.edu.zju.isst.entity.PushingSpittle;
 import cn.edu.zju.isst.entity.Spittle;
+import cn.edu.zju.isst.entity.SpittleLikeCrazyUser;
 import cn.edu.zju.isst.entity.User;
 import cn.edu.zju.isst.entity.UserSpittle;
 
@@ -38,6 +39,10 @@ public class SpittleDao {
     
     public static SpittleDao getInstance() {
         return instance;
+    }
+    
+    public boolean exist(int id) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(id) FROM yd_spittle WHERE id=?", new Object[] {id}, Integer.class) > 0 ? true : false;
     }
     
     public Spittle get(int id) {
@@ -99,8 +104,8 @@ public class SpittleDao {
                 ls.setDislikes(rs.getInt("dislikes"));
                 int spittleCount = rs.getInt("spittle_count");
                 int spittleLikes = rs.getInt("spittle_likes");
-                int weight = (int) (Math.floor(Math.log(spittleCount+spittleLikes) / Math.log(2)) + 1);
-                ls.setWeight(weight > PartyConfig.LOTTERY_MAX_SPITTLES ? PartyConfig.LOTTERY_MAX_SPITTLES : weight);
+                int weight = (int) (Math.round(Math.log(spittleCount+spittleLikes) / Math.log(2)));
+                ls.setWeight(weight);
                 User user = userDao.getUserById(rs.getInt("user_id"));
                 if (user != null) {
                     ls.setUserName(user.getName());
@@ -255,5 +260,23 @@ public class SpittleDao {
         jdbcTemplate.update(updateSql.toString(), new Object[] {spittleId});
         
         return true;
+    }
+    
+    public List<SpittleLikeCrazyUser> getLikeCrazyUser(boolean isLike, int top) {
+        String sql = "SELECT COUNT(id) likes_count, user_id FROM `yd_spittle_user` WHERE is_like=? GROUP BY user_id ORDER BY likes_count DESC LIMIT " + top;
+        return jdbcTemplate.query(sql, new Object[] {isLike ? 1 : 0}, new RowMapper<SpittleLikeCrazyUser>() {
+            @Override
+            public SpittleLikeCrazyUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new SpittleLikeCrazyUser(userDao.getUserById(rs.getInt("user_id")), rs.getInt("likes_count"));
+            }
+        });
+    }
+    
+    public List<SpittleLikeCrazyUser> getLikeCrazyUser(int top) {
+        return getLikeCrazyUser(true, top);
+    }
+    
+    public List<SpittleLikeCrazyUser> getDislikeCrazyUser(int top) {
+        return getLikeCrazyUser(false, top);
     }
 }
