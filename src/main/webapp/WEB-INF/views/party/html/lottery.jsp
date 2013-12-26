@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <head>
 <base href="<%=basePath%>" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>浙江大学软件学院元旦晚会</title>
+<title>抽奖</title>
 <link href="resources/css/party-screen.css"  type="text/css" rel="stylesheet"/>
 </head>
 <body class="lottery-page">
@@ -395,7 +395,7 @@ $(function() {
 
  		var $this = $(this);
 		var count = prizeCount[sl.prizeType()];
-		console.log(winnerNum);
+		//console.log(winnerNum);
 		if (winnerNum > count-1) {
 			return false;
 		}

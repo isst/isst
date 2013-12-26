@@ -35,7 +35,8 @@ public class UserServiceImpl implements UserService {
             return new ResultHolder("昵称不能为空");
         }
         
-        nickname = nickname.replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>","");
+        nickname = nickname.trim();
+        nickname = nickname.replaceAll("&([#a-zA-Z0-9]+)", "").replaceAll("\\<.*?>","").replaceAll("\\s", "");
         
         if (nickname.length() > 10) {
             return new ResultHolder("昵称不能大于10个字符");

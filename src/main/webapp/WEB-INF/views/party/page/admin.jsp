@@ -52,6 +52,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </c:if>
 </div>
 
+<input type="button" value="清除用户缓存" id="clearCachedUsers" />
+
 <script type="text/javascript">
 $(function() {
 	var $pushMessageTitle = $("#pushMessageTitle");
@@ -69,6 +71,14 @@ $(function() {
 				}
 			});
 		}
+	});
+	
+	$("#clearCachedUsers").click(function() {
+		var $this = $(this);
+		$this.button("disable");
+		$.get($.isst.party.createUrl("admin/clearCachedUsers"), function() {
+			$this.button("enable");
+		});
 	});
 });
 </script>

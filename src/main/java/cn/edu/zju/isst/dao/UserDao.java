@@ -123,6 +123,10 @@ public class UserDao {
         return !checkUserName(name, 0);
     }
     
+    public void clearCachedUsers() {
+        cachedUsers.clear();
+    }
+    
     public boolean checkUserName(String name, int id) {
         StringBuilder sql = new StringBuilder("SELECT COUNT(id) FROM user WHERE name=?");
 

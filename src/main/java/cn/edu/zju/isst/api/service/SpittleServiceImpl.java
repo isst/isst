@@ -23,7 +23,8 @@ public class SpittleServiceImpl implements SpittleService {
 
     private static Map<Integer, Long> userLastPostTimes = new HashMap<Integer, Long>();
     private static Map<Integer, String> userLastPostContents = new HashMap<Integer, String>();
-    
+    private static Map<Integer, Integer> userPostCounts = new HashMap<Integer, Integer>();
+
     @Override
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
         return spittleDao.retrieve(userId, order, page, pageSize, id);
@@ -34,17 +35,43 @@ public class SpittleServiceImpl implements SpittleService {
         if (userDao.getUserById(userId) == null) {
             return new ResultHolder("用户不存在");
         }
+
+        if (content == null) {
+            return new ResultHolder("评论内容不能为空");
+        }
+
+        content = content.trim();
+        content = content.replaceAll("&([#a-zA-Z0-9]+)", "").replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>", "");
         
-        if (content == null || content.length() < 5 || content.length() > 140) {
+        if (content.length() < 5 || content.length() > 140) {
             return new ResultHolder("评论内容必须在5~140个字符之间");
         }
-        
-        content = content.replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>","");
-        
+
         Long lastPostTime = userLastPostTimes.get(userId);
         long currentTimeMillis = System.currentTimeMillis();
-        if (null != lastPostTime && currentTimeMillis - lastPostTime < PartyConfig.SPITTLE_POST_INTERVAL) {
+        
+        Integer postCount = userPostCounts.get(userId);
+        if (null == postCount) {
+            postCount = spittleDao.countUserPost(userId);
+        }
+        
+        long interval = (long) (PartyConfig.SPITTLE_POST_INTERVAL * Math.ceil((postCount * 1.0 / 50)));System.out.println(interval);
+        if (null != lastPostTime && currentTimeMillis - lastPostTime < interval) {
             return new ResultHolder("发布过于频繁");
+        }
+
+        userLastPostTimes.put(userId, currentTimeMillis);
+
+        int mid = content.length() / 2;
+        char c = content.charAt(mid);
+        int count = 0;
+        for (int i = 0; i < content.length(); i++) {
+            if (c == content.charAt(i)) {
+                count++;
+            }
+        }
+        if (count > mid) {
+            return new ResultHolder("请不要发布无意义的评论");
         }
         
         String lastContent = userLastPostContents.get(userId);
@@ -59,7 +86,7 @@ public class SpittleServiceImpl implements SpittleService {
                 }
             }
         }
-        
+
         Spittle spittle = new Spittle();
         spittle.setUserId(userId);
         spittle.setContent(content);
@@ -68,13 +95,13 @@ public class SpittleServiceImpl implements SpittleService {
         spittle.setDislikes(0);
         int id = spittleDao.create(spittle);
         if (id > 0) {
-            userLastPostTimes.put(userId, currentTimeMillis);
+            userPostCounts.put(userId, postCount+1);
             userLastPostContents.put(userId, content);
             return new ResultHolder(id);
         } else
             return new ResultHolder(0);
     }
-    
+
     @Override
     public ResultHolder delete(int userId, int spittleId) {
         Spittle spittle = spittleDao.get(spittleId);
@@ -88,13 +115,13 @@ public class SpittleServiceImpl implements SpittleService {
 
     @Override
     public ResultHolder like(int userId, int spittleId, int isLike) {
-        if (null ==userDao.getUserById(userId)) {
+        if (null == userDao.getUserById(userId)) {
             return new ResultHolder("用户不存在");
         }
         if (!spittleDao.exist(spittleId)) {
             return new ResultHolder("评论不存在");
         }
-        
+
         if (spittleDao.like(userId, spittleId, isLike)) {
             return new ResultHolder();
         } else {

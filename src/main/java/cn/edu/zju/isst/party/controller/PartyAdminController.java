@@ -54,6 +54,12 @@ public class PartyAdminController extends BaseController {
         }
         return "redirect:index.html";
     }
+    
+    @RequestMapping("/admin/clearCachedUsers")
+    @ResponseStatus(HttpStatus.OK)
+    public void clearCachedUsers() {
+        userDao.clearCachedUsers();
+    }
 
     @RequestMapping(value = "/votes.html")
     public String votes(@ModelAttribute("user") LoggedUser user, Model model) {

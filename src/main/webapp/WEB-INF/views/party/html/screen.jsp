@@ -10,7 +10,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <head>
 <base href="<%=basePath%>" />
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>浙江大学软件学院元旦晚会</title>
+<title>评论</title>
 <link href="resources/css/party-screen.css"  type="text/css" rel="stylesheet"/>
 </head>
 <body>

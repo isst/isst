@@ -45,6 +45,10 @@ public class SpittleDao {
         return jdbcTemplate.queryForObject("SELECT COUNT(id) FROM yd_spittle WHERE id=?", new Object[] {id}, Integer.class) > 0 ? true : false;
     }
     
+    public int countUserPost(int userId) {
+        return jdbcTemplate.queryForObject("SELECT COUNT(id) FROM yd_spittle WHERE user_id=?", new Object[] {userId}, Integer.class);
+    }
+    
     public Spittle get(int id) {
         String sql = "SELECT * FROM yd_spittle WHERE id=?";
         List<Spittle> spittles = jdbcTemplate.query(sql, new Object[] { id }, ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
@@ -104,7 +108,7 @@ public class SpittleDao {
                 ls.setDislikes(rs.getInt("dislikes"));
                 int spittleCount = rs.getInt("spittle_count");
                 int spittleLikes = rs.getInt("spittle_likes");
-                int weight = (int) (Math.round(Math.log(spittleCount+spittleLikes) / Math.log(2)));
+                int weight = (int) (Math.ceil(Math.log(spittleCount+spittleLikes) / Math.log(2)));
                 ls.setWeight(weight);
                 User user = userDao.getUserById(rs.getInt("user_id"));
                 if (user != null) {
