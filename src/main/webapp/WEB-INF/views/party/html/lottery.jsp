@@ -365,9 +365,9 @@ $(function() {
 			var spittle = spittles[i];
 			var $li = newTemplate(spittle);
 			$li.attr({
-				'data-user-id': spittle.userId+j,
-				'data-fullname': spittle.fullname + j,
-				'data-weight': spittle.weight+j
+				'data-user-id': spittle.userId,
+				'data-fullname': spittle.fullname,
+				'data-weight': spittle.weight
 			});
 			$ul.append($li);
 		}
