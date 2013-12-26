@@ -46,7 +46,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </div>
 
 <div id="winnerPopup">
-	<p><label id="winnerPrizeType"></label>：<span id="winnerUserName"></span></p>
+	<p><span id="winnerUserName"></span>：<label id="winnerFullName"></label></p>
 </div>
 
 <div id="winnerSpittlePopup"></div>
@@ -273,7 +273,7 @@ var PopupWinner = function($winnerPopup, $winnerSpittlePopup, $overlay, $ul) {
 		
 		$winnerSpittlePopup.animate({left: toLeft + 'px', top: toTop + 'px'}, 1000, function() {
 			$winnerPopup.find("#winnerUserName").text(winner.userName);
-			$winnerPopup.find("#winnerPrizeType").text($("#prize"+winner.prizeType).text());
+			$winnerPopup.find("#winnerFullName").text(winner.fullName);
 			$winnerPopup.css({left: toLeft + 'px', top: (toTop - $winnerPopup.outerHeight(true) - 20) + 'px'});
 			$winnerPopup.show();
 		});
@@ -325,7 +325,7 @@ var WinnerList = function($winnerList, $overlay, prizeType) {
 		$winnerList.addClass("window");
 		var len = $winnerWrapper.find(".spittle-winner").length;
 		if (len < 4) {
-			$winnerList.width(222 * len);
+			$winnerList.width(232 * len);
 		}
 		
 		var toWidth = $winnerList.outerWidth(true);
