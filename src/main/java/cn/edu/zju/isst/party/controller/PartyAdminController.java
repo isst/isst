@@ -112,9 +112,10 @@ public class PartyAdminController extends BaseController {
 
     @RequestMapping(value = "/admin/winPrize", method = RequestMethod.POST)
     public @ResponseBody
-    ResultHolder savePrize(@ModelAttribute("user") LoggedUser user, @RequestParam("spittleId") int spittleId, @RequestParam("prizeType") int prizeType) {
+    ResultHolder savePrize(@ModelAttribute("user") LoggedUser user, @RequestParam("spittleId[]") int[] spittleIds, @RequestParam("prizeType") int prizeType) {
         if (user.getId() == 1) {
-            return new ResultHolder(spittleDao.winPrize(spittleId, prizeType));
+            spittleDao.winPrize(spittleIds, prizeType);
+            return new ResultHolder();
         } else {
             return new ResultHolder("无权限");
         }

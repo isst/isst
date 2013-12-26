@@ -49,6 +49,17 @@ public class SpittleDao {
         return spittles.get(0);
     }
     
+    public List<Spittle> get(int[] ids) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM yd_spittle WHERE id IN (");
+        sql.append(ids[0]);
+        for (int i=1; i<ids.length; i++) {
+            sql.append(",").append(ids[i]);
+        }
+        sql.append(")");
+        List<Spittle> spittles = jdbcTemplate.query(sql.toString(), ParameterizedBeanPropertyRowMapper.newInstance(Spittle.class));
+        return spittles;
+    }
+    
     @Transactional
     public PushingSpittle getPushingSpittle() {
         String sql = "SELECT * FROM yd_spittle WHERE is_display=? ORDER BY likes_diff DESC, id ASC LIMIT 0, 1";
@@ -75,7 +86,7 @@ public class SpittleDao {
     }
     
     public List<LotterySpittle> retrieveLotterySpittles() {
-        String sql = "SELECT s.*, COUNT(s.id) spittle_count, SUM(likes) spittle_likes FROM (SELECT * FROM  yd_spittle ORDER BY likes DESC) s WHERE user_id NOT IN (SELECT DISTINCT user_id FROM yd_spittle_lottery) GROUP BY user_id;";
+        String sql = "SELECT s.*, COUNT(s.id) spittle_count, SUM(likes) spittle_likes FROM (SELECT * FROM  yd_spittle ORDER BY likes DESC) s WHERE user_id NOT IN (SELECT DISTINCT user_id FROM yd_spittle_lottery) GROUP BY user_id ORDER BY RAND()";
         return jdbcTemplate.query(sql, new RowMapper<LotterySpittle>() {
             @Override
             public LotterySpittle mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -149,29 +160,25 @@ public class SpittleDao {
         return id;
     }
     
-    public int winPrize(int spittleId, final int prizeType) {
-        final Spittle spittle = get(spittleId);
-        if (null == spittle) {
-            return 0;
+    public void winPrize(int[] spittleIds, final int prizeType) {
+        List<Spittle> spittles = get(spittleIds);
+        
+        if (spittles != null) {
+            for (final Spittle spittle : spittles) {
+                jdbcTemplate.update(new PreparedStatementCreator() {
+                    public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
+                        String sql = "INSERT INTO yd_spittle_lottery (year,user_id,spittle_id,post_time,prize_type) VALUES (?,?,?,?,?)";
+                        PreparedStatement ps = conn.prepareStatement(sql, new String[] {"id"});
+                        ps.setInt(1, spittle.getYear());
+                        ps.setInt(2, spittle.getUserId());
+                        ps.setInt(3, spittle.getId());
+                        ps.setLong(4, System.currentTimeMillis()/1000);
+                        ps.setInt(5, prizeType);
+                        return ps;
+                    }
+                 });
+            }
         }
-        
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbcTemplate.update(new PreparedStatementCreator() {
-           public PreparedStatement createPreparedStatement(Connection conn) throws SQLException {
-               String sql = "INSERT INTO yd_spittle_lottery (year,user_id,spittle_id,post_time,prize_type) VALUES (?,?,?,?,?)";
-               PreparedStatement ps = conn.prepareStatement(sql, new String[] {"id"});
-               ps.setInt(1, spittle.getYear());
-               ps.setInt(2, spittle.getUserId());
-               ps.setInt(3, spittle.getId());
-               ps.setLong(4, System.currentTimeMillis()/1000);
-               ps.setInt(5, prizeType);
-               return ps;
-           }
-        }, keyHolder);
-        
-        int id = keyHolder.getKey().intValue();
-        spittle.setId(id);
-        return id;
     }
 
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {

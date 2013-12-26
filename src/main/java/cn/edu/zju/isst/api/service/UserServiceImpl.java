@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResultHolder updateNickname(int userId, String nickname) {
+        nickname = nickname.replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>","");
         if (userDao.updateNickname(userId, nickname)) {
             return new ResultHolder(userId);
         } else {

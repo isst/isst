@@ -85,7 +85,7 @@ function onData(event) {
 	var spittle = event.get("spittle");
 	if (spittle) {
 		spittle = $.parseJSON(spittle);
-	    if (spittle) {console.log(spittle);
+	    if (spittle) {
 			for (var key in spittle) {
 				spittle[key] = decodeURIComponent(spittle[key]);
 			}

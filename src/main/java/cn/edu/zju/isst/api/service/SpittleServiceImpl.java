@@ -35,9 +35,11 @@ public class SpittleServiceImpl implements SpittleService {
             return new ResultHolder("用户不存在");
         }
         
-        if (content == null || content.length() < 5 || content.length() > 200) {
-            return new ResultHolder("评论内容必须在5~200个字符之间");
+        if (content == null || content.length() < 5 || content.length() > 140) {
+            return new ResultHolder("评论内容必须在5~140个字符之间");
         }
+        
+        content = content.replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>","");
         
         Long lastPostTime = userLastPostTimes.get(userId);
         long currentTimeMillis = System.currentTimeMillis();
