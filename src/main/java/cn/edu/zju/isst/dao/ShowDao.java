@@ -148,7 +148,7 @@ public class ShowDao {
     }
     
     public Map<Integer, Integer> statisticalVote() {
-        String sql = "SELECT show_id, votes FROM (SELECT show_id, SUM(weight) as votes, COUNT(id) as vote_count, user_id FROM yd_show_vote GROUP BY show_id, user_id) t WHERE t.vote_count>=5 GROUP BY show_id";
+        String sql = "SELECT show_id, SUM(weight) votes FROM yd_show_vote WHERE user_id IN (SELECT user_id FROM (SELECT user_id, COUNT(id) vote_count FROM yd_show_vote GROUP BY user_id HAVING vote_count>=5) t) GROUP BY show_id;";
         return jdbcTemplate.query(sql, new ResultSetExtractor<Map<Integer, Integer>>() {
             @Override
             public Map<Integer, Integer> extractData(ResultSet rs) throws SQLException {
