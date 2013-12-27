@@ -49,6 +49,11 @@ public class PartyAdminController extends BaseController {
         }
         return "redirect:index.html";
     }
+
+    @RequestMapping(value = "/notice.html", method = RequestMethod.GET)
+    public String index() {
+        return "notice.html";
+    }
     
     @RequestMapping(value = "/crazy.html", method = RequestMethod.GET)
     public String crazy(Model model, @ModelAttribute("user") LoggedUser user) {
