@@ -28,9 +28,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <div class="screen">
 	<div class="spittle-bg">
 		<div class="spittle-wrapper notice">
-			<p>欢迎下载Android版本：<em>http://www.zjucst.com/downloads/isst-1.0.0.pak</em>，
-			或登录<em>http://www.zjucst.com/isst/party/，</em>
-			嘉宾登录用户名：姓名全拼，密码为指定密码；学生登录用户名：学号，密码：身份证后六位（若不能登录请使用“123456”登录），参与元旦晚会在线评论及投票，赢取丰厚礼品！机会就在身边，小伙伴请快快拿起手机登录吧！</p>
+			<p>欢迎下载Android版本或登录<em>http://www.zjucst.com/isst/party/，</em>
+			嘉宾登录用户名：姓名全拼，密码为指定密码；学生登录用户名：学号，密码：身份证后六位（若不能登录请使用“123456”登录），参与元旦晚会在线评论及投票，赢取丰厚礼品，发布评论及获得赞数越多，中奖概率越大！机会就在身边，小伙伴请快快拿起手机登录吧！</p>
 		</div>
     </div>
 </div>

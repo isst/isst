@@ -77,7 +77,7 @@ var Scrolling = function($ul) {
 	var endScrollingNum = 0;
 	var endCallback = null;
 	var stopCallback = null;
-	
+	var endScrollLength = [2, 1, 1, 0, 0];
 	var ulHeight = 0;
 	var liCount = 0;
 
@@ -151,7 +151,7 @@ var Scrolling = function($ul) {
 					isParsed = false;
 					$ul.stop();
 					var info = populateWinner(curTop);
-					var duration = ((1 + info.winnerIndex-info.index + liCount) % liCount)*500;
+					var duration = ((1 + info.winnerIndex-info.index + liCount) % liCount)*1000;
 					$ul.animate({top: info.winnerTop + "px"}, {
 						duration: duration,
 						easing: "easeOutCirc",
@@ -204,7 +204,7 @@ var Scrolling = function($ul) {
 
 	this.start = function(prize) {
 		prizeType = prize;
-		endScrollingNum = 7 - prize;
+		endScrollingNum = endScrollLength[prize];
 		isEnd = false;
 		doScrolling("easeInCirc");
 	};
