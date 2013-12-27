@@ -80,7 +80,7 @@ $(function() {
 				$spittle.find('.spittle-dislike em').text(parseInt($spittle.find('.spittle-dislike em').text())+1);
 			} else {
 				alert(response.message);
-				//$spittle.find('.spittle-like, .spittle-dislike').removeClass('ui-disabled');
+				$spittle.find('.spittle-like, .spittle-dislike').removeClass('ui-disabled');
 			}
 		});
 	};
@@ -96,7 +96,7 @@ $(function() {
 				$spittle.find('.spittle-like em').text(parseInt($spittle.find('.spittle-like em').text())+1);
 			} else {
 				alert(response.message);
-				//$spittle.find('.spittle-like, .spittle-dislike').removeClass('ui-disabled');
+				$spittle.find('.spittle-like, .spittle-dislike').removeClass('ui-disabled');
 			}
 		});
 	};
@@ -174,9 +174,11 @@ $(function() {
 			}
 			
 			renderSpittles(spittles);
-		}, function() {
-			$this.prev('span').find('.ui-btn-text').text('更多');
-			$this.button('enable');
+		}, function(response) {
+			if (response.responseJSON.length != 0) {
+				$this.prev('span').find('.ui-btn-text').text('更多');
+				$this.button('enable');
+			}
 		});
 	});
 	

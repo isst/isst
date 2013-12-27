@@ -14,7 +14,6 @@ import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Show;
 import cn.edu.zju.isst.entity.User;
 import cn.edu.zju.isst.entity.UserShowVote;
-import cn.edu.zju.isst.pushlet.ShowVoteEventPullSource;
 
 @Service
 public class ShowServiceImpl implements ShowService {

@@ -25,6 +25,7 @@ $(function() {
 	
 	$("#showVoteCancel").click(function() {
 		$('.ui-dialog').dialog('close');
+		window.location.href = "<%=basePath%>party/shows.html";
 	});
 });
 </script>

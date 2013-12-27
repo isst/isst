@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import cn.edu.zju.isst.api.service.UserService;
 import cn.edu.zju.isst.bccs.BccsApi;
+import cn.edu.zju.isst.config.PartyConfig;
 import cn.edu.zju.isst.dao.ShowDao;
 import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.dao.UserDao;
@@ -34,12 +36,15 @@ public class PartyAdminController extends BaseController {
     private SpittleDao spittleDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private UserService userService;
 
     @RequestMapping(value = "/admin.html", method = RequestMethod.GET)
     public String index(Model model, @ModelAttribute("user") LoggedUser user) {
         if (user.getId() == 1) {
             model.addAttribute("shows", showDao.retrieve());
             model.addAttribute("teachers", userDao.retrieve(1));
+            model.addAttribute("isPartyEnded", PartyConfig.PARTY_ENDED);
             return "admin.page";
         }
         return "redirect:index.html";
@@ -55,10 +60,21 @@ public class PartyAdminController extends BaseController {
         return "redirect:index.html";
     }
     
-    @RequestMapping("/admin/clearCachedUsers")
+    @RequestMapping("/admin/clearCached")
     @ResponseStatus(HttpStatus.OK)
-    public void clearCachedUsers() {
-        userDao.clearCachedUsers();
+    public void clearCached(@ModelAttribute("user") LoggedUser user) {
+        if (user.getId() == 1) {
+            userDao.clearCachedUsers();
+            userService.cleanUserLoggedCounts();
+        }
+    }
+    
+    @RequestMapping("/admin/partyEnded")
+    @ResponseStatus(HttpStatus.OK)
+    public void partyEnded(@ModelAttribute("user") LoggedUser user) {
+        if (user.getId() == 1) {
+            PartyConfig.PARTY_ENDED = !PartyConfig.PARTY_ENDED;
+        }
     }
 
     @RequestMapping(value = "/votes.html")

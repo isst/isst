@@ -5,6 +5,9 @@ String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <c:set var="activeNav" value="shows" scope="request" />
+
+<input type="button" id="showsUpdate" value="更新节目" data-theme="b" />
+
 <ul data-role="listview" data-count-theme="c" data-inset="true" id="show-list">
 <c:forEach var="show" items="${shows}">
 <li>
@@ -21,3 +24,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </li>
 </c:forEach>
 </ul>
+<script type="text/javascript">
+$(function() {
+	$("#showsUpdate").click(function() {
+		window.location.reload();
+	});
+});
+</script>

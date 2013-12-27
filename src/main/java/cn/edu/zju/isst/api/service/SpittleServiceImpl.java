@@ -24,6 +24,7 @@ public class SpittleServiceImpl implements SpittleService {
     private static Map<Integer, Long> userLastPostTimes = new HashMap<Integer, Long>();
     private static Map<Integer, String> userLastPostContents = new HashMap<Integer, String>();
     private static Map<Integer, Integer> userPostCounts = new HashMap<Integer, Integer>();
+    private static Map<Integer, Long> userLastLikeTimes = new HashMap<Integer, Long>();
 
     @Override
     public List<UserSpittle> retrieve(int userId, String order, int page, int pageSize, int id) {
@@ -32,6 +33,10 @@ public class SpittleServiceImpl implements SpittleService {
 
     @Override
     public ResultHolder post(int userId, String content) {
+        if (PartyConfig.PARTY_ENDED) {
+            return new ResultHolder("晚会已结束，暂停吐槽");
+        }
+        
         if (userDao.getUserById(userId) == null) {
             return new ResultHolder("用户不存在");
         }
@@ -41,7 +46,7 @@ public class SpittleServiceImpl implements SpittleService {
         }
 
         content = content.trim();
-        content = content.replaceAll("&([#a-zA-Z0-9]+)", "").replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>", "");
+        content = content.replaceAll("&([#a-zA-Z0-9]+);", "").replaceAll("(\r\n|\n)", " ").replaceAll("\\<.*?>", "");
         
         if (content.length() < 5 || content.length() > 140) {
             return new ResultHolder("评论内容必须在5~140个字符之间");
@@ -105,7 +110,7 @@ public class SpittleServiceImpl implements SpittleService {
     @Override
     public ResultHolder delete(int userId, int spittleId) {
         Spittle spittle = spittleDao.get(spittleId);
-        if (spittle.getUserId() == userId) {
+        if (userId == 1 || spittle.getUserId() == userId) {
             spittleDao.delete(spittleId);
             return new ResultHolder();
         } else {
@@ -115,11 +120,20 @@ public class SpittleServiceImpl implements SpittleService {
 
     @Override
     public ResultHolder like(int userId, int spittleId, int isLike) {
+        if (PartyConfig.PARTY_ENDED) {
+            return new ResultHolder("晚会已结束，暂停点赞/踩");
+        }
+        
+        Long lastLikeTime = userLastLikeTimes.get(userId);
+        long currentTimeMillis = System.currentTimeMillis();
+        if (null != lastLikeTime && currentTimeMillis - lastLikeTime < PartyConfig.SPITTLE_LIKE_INTERVAL) {
+            return new ResultHolder("点太快了");
+        }
+        
+        userLastLikeTimes.put(userId, currentTimeMillis);
+        
         if (null == userDao.getUserById(userId)) {
             return new ResultHolder("用户不存在");
-        }
-        if (!spittleDao.exist(spittleId)) {
-            return new ResultHolder("评论不存在");
         }
 
         if (spittleDao.like(userId, spittleId, isLike)) {

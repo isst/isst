@@ -21,9 +21,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		
 		$(document).bind("mobileinit", function () {
     		//$.mobile.ajaxEnabled = false;
-    		$.mobile.defaultPageTransition = 'none';
-      		$.mobile.defaultDialogTransition = 'none';
-      		$.mobile.useFastClick = true;
+    		//$.mobile.defaultPageTransition = 'none';
+      		//$.mobile.defaultDialogTransition = 'none';
+      		//$.mobile.useFastClick = true;
 		});
 		
 		$.isst = {

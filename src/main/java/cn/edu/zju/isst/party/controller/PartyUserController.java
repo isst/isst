@@ -55,8 +55,7 @@ public class PartyUserController extends BaseController {
     }
 
     @RequestMapping("/userForm.html")
-    public String form(@RequestParam(value = "userId", required = false, defaultValue = "0") int userId, Model model,
-            @ModelAttribute("user") LoggedUser user) {
+    public String form(@ModelAttribute("user") LoggedUser user, @RequestParam(value = "userId", required = false, defaultValue = "0") int userId, Model model) {
         if (user.getId() != 1) {
             return "redirect:index.html";
         }
@@ -80,6 +79,7 @@ public class PartyUserController extends BaseController {
     ResultHolder post(@RequestParam(value = "id", required = false, defaultValue = "0") int id,
             @RequestParam("name") String name, @RequestParam("password") String password,
             @RequestParam("fullname") String fullname, @RequestParam("nickname") String nickname,
+            @RequestParam("type") int type,
             @ModelAttribute("user") LoggedUser user) {
         if (user.getId() != 1) {
             return new ResultHolder("无权限");
@@ -97,7 +97,7 @@ public class PartyUserController extends BaseController {
         teacher.setFullname(fullname);
         teacher.setNickname(nickname);
         teacher.setPassword(password == null || password.equals("") ? null : userDao.encryptPassword(password));
-        teacher.setType(1);
+        teacher.setType(type);
 
         if (teacher.getId() > 0) {
             userDao.update(teacher);

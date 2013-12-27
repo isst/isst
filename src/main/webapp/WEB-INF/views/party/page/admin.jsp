@@ -52,7 +52,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </c:if>
 </div>
 
-<input type="button" value="清除用户缓存" id="clearCachedUsers" />
+<input type="button" value="清除缓存" id="clearCached" />
+<input type="button" value="${isPartyEnded? '晚会结束':'晚会进行中'}" id="partyEnded" />
 
 <script type="text/javascript">
 $(function() {
@@ -73,10 +74,20 @@ $(function() {
 		}
 	});
 	
-	$("#clearCachedUsers").click(function() {
+	$("#clearCached").click(function() {
 		var $this = $(this);
 		$this.button("disable");
-		$.get($.isst.party.createUrl("admin/clearCachedUsers"), function() {
+		$.get($.isst.party.createUrl("admin/clearCached"), function() {
+			$this.button("enable");
+		});
+	});
+	
+	$("#partyEnded").click(function() {
+		var $this = $(this);
+		$this.button("disable");
+		$.get($.isst.party.createUrl("admin/partyEnded"), function() {
+			var $span = $this.prev('.ui-btn-inner').find('.ui-btn-text');
+			$span.text($span.text()=="晚会结束" ? "晚会进行中" : "晚会结束");
 			$this.button("enable");
 		});
 	});
