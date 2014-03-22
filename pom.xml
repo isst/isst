@@ -158,7 +158,7 @@
       	<configuration>
       	  <scanIntervalSeconds>10</scanIntervalSeconds>
       	  <webAppConfig>
-      	  	<contextPath>/isst</contextPath>
+      	  	<contextPath>/party</contextPath>
       	  </webAppConfig>
       	</configuration>
       </plugin>
@@ -169,7 +169,7 @@
           <url>http://localhost:8080/manager/text</url>
           <username>admin</username>
           <password>isst</password>
-          <path>/isst</path>
+          <path>/party</path>
         </configuration>  
        </plugin>  
     </plugins>
