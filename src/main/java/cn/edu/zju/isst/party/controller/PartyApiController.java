@@ -113,7 +113,7 @@ public class PartyApiController extends BaseController {
             method = request.getMethod();
         }
         
-        String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + "/isst/api" + path;
+        String url = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() + "/" + request.getContextPath()+ "/api" + path;
         if (method.equals("GET")) {
             if (!data.isEmpty()) {
                 StringBuilder urlBuilder = new StringBuilder(url);
