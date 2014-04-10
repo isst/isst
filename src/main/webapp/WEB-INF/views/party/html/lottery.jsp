@@ -78,6 +78,7 @@ var Scrolling = function($ul) {
 	var endCallback = null;
 	var stopCallback = null;
 	var endScrollLength = [2, 1, 1, 0, 0];
+	var startScrollLength = 10;
 	var ulHeight = 0;
 	var liCount = 0;
 
@@ -90,9 +91,13 @@ var Scrolling = function($ul) {
 		var positiveCurTop = 0 - curTop;
 		var endTop = 0;
 		
-		for (var i=0; i<offsetTopIndexes.length; i++) {
+		for (var i=0, j=0; i<offsetTopIndexes.length; i++) {
 			if (!winnerIndexMap[i] && positiveCurTop < offsetTopIndexes[i]) {
-				break;
+				if (j>startScrollLength) {
+					break;
+				} else {
+					j++;
+				}
 			}
 		}
 		
@@ -103,7 +108,7 @@ var Scrolling = function($ul) {
 				}
 			}
 		}
-
+		
 		var endIndex = (i + endScrollingNum) % liCount;
 		var maxWeight = 0;
 		var winnerIndex = i;
@@ -151,7 +156,7 @@ var Scrolling = function($ul) {
 					isParsed = false;
 					$ul.stop();
 					var info = populateWinner(curTop);
-					var duration = ((1 + info.winnerIndex-info.index + liCount) % liCount)*1000;
+					var duration = ((1 + info.winnerIndex-info.index + liCount) % liCount)*2000;
 					$ul.animate({top: info.winnerTop + "px"}, {
 						duration: duration,
 						easing: "easeOutCirc",
