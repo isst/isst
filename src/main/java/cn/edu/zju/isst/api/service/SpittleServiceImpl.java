@@ -12,6 +12,7 @@ import cn.edu.zju.isst.dao.SpittleDao;
 import cn.edu.zju.isst.dao.UserDao;
 import cn.edu.zju.isst.entity.ResultHolder;
 import cn.edu.zju.isst.entity.Spittle;
+import cn.edu.zju.isst.entity.User;
 import cn.edu.zju.isst.entity.UserSpittle;
 
 @Service
@@ -37,10 +38,15 @@ public class SpittleServiceImpl implements SpittleService {
             return new ResultHolder("晚会已结束，暂停吐槽");
         }
         
-        if (userDao.getUserById(userId) == null) {
+        User user = userDao.getUserById(userId);
+        if (user == null) {
             return new ResultHolder("用户不存在");
         }
-
+        
+        if (user.isDisabled()) {
+            return new ResultHolder("你已被禁言，请联系工作人员");
+        }
+        
         if (content == null) {
             return new ResultHolder("评论内容不能为空");
         }
@@ -60,7 +66,7 @@ public class SpittleServiceImpl implements SpittleService {
             postCount = spittleDao.countUserPost(userId);
         }
         
-        long interval = (long) (PartyConfig.SPITTLE_POST_INTERVAL * Math.ceil((postCount * 1.0 / 50)));System.out.println(interval);
+        long interval = (long) (PartyConfig.SPITTLE_POST_INTERVAL * Math.ceil((postCount * 1.0 / 50)));
         if (null != lastPostTime && currentTimeMillis - lastPostTime < interval) {
             return new ResultHolder("发布过于频繁");
         }

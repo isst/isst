@@ -52,6 +52,21 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </c:if>
 </div>
 
+<div data-role="collapsible" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d" data-collapsed="true" data-content-theme="c">
+	<h3>禁言名单</h3>
+	<ul data-role="listview" data-count-theme="c" data-inset="true" id="show-list">
+		<c:forEach var="user" items="${disabledUsers}">
+		<li>
+			<a data-rel="dialog" href="<%=basePath%>party/enableUserForm.html?userId=${user.id}">
+				<h2>${user.name}</h2>
+				<p>${user.fullname}&nbsp;&nbsp;|&nbsp;&nbsp;${user.nickname}</p>
+			</a>
+		</li>
+		</c:forEach>
+	</ul>
+	<a href="<%=basePath%>party/disableUserForm.html" data-rel="dialog" data-role="button" data-theme="b">添加禁言</a>
+</div>
+
 <input type="button" value="清除缓存" id="clearCached" />
 <input type="button" value="${isPartyEnded? '晚会结束':'晚会进行中'}" id="partyEnded" />
 

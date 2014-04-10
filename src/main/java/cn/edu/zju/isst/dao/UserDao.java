@@ -118,6 +118,23 @@ public class UserDao {
 
         return true;
     }
+    
+    public void disable(int userId) {
+        String sql = "UPDATE user SET disabled=1 WHERE id=?";
+        jdbcTemplate.update(sql, new Object[] { userId });
+        cachedUsers.remove(userId);
+    }
+    
+    public void enable(int userId) {
+        String sql = "UPDATE user SET disabled=0 WHERE id=?";
+        jdbcTemplate.update(sql, new Object[] { userId });
+        cachedUsers.remove(userId);
+    }
+    
+    public List<User> findDisabled() {
+        String sql = "SELECT * FROM user WHERE disabled=1 ORDER BY id ASC";
+        return jdbcTemplate.query(sql, getUserRowMapper());
+    }
 
     public boolean userNameExisting(String name) {
         return !checkUserName(name, 0);
@@ -152,6 +169,7 @@ public class UserDao {
                 user.setFullname(rs.getString("fullname"));
                 user.setType(rs.getInt("type"));
                 user.setPassword(rs.getString("password"));
+                user.setDisabled(rs.getInt("disabled") > 0 ? true : false);
                 return user;
             }
         };

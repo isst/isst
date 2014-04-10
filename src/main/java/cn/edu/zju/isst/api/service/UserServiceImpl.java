@@ -1,6 +1,7 @@
 package cn.edu.zju.isst.api.service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +66,22 @@ public class UserServiceImpl implements UserService {
         } else {
             return new ResultHolder(0);
         }
+    }
+    
+    public void disableUser(int userId) {
+        userDao.disable(userId);
+    }
+    
+    public void enableUser(int userId) {
+        userDao.enable(userId);
+    }
+    
+    public List<User> findDisabled() {
+        return userDao.findDisabled();
+    }
+
+    @Override
+    public User get(String username) {
+        return userDao.getUserByName(username);
     }
 }

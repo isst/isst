@@ -60,7 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         },
 		axes: {
 			yaxis:{
-				ticks: [0, 100, 200, 300, 400, 500, 600, 700],
+				ticks: [0, 30, 60, 90, 120],
 				tickOptions: {
 					formatString: '%d'
 				},
